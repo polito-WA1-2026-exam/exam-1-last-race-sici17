@@ -1,0 +1,59 @@
+### Configurazione globale delle variabili per il test
+@baseUrl = http://localhost:3001/api
+
+### ------------------------------------------------------------
+### TEST UTENTE ANONIMO (Gestito interamente tramite Sessione)
+### ------------------------------------------------------------
+
+### 1. Avvio della partita come Anonimo
+POST {{baseUrl}}/games/start
+Content-Type: application/json
+
+### 2. Esegui un passo (Sostituisci l'ID con uno di quelli ricevuti in 'nextSteps')
+# Nota: esegui questa chiamata più volte per muoverti finché non vinci o perdi!
+POST {{baseUrl}}/games/step
+Content-Type: application/json
+
+{
+  "nextStationId": 2
+}
+
+
+### ------------------------------------------------------------
+### TEST UTENTE AUTENTICATO (Passport.js + Sessione)
+### ------------------------------------------------------------
+
+### 3. Tentativo di accesso alla cronologia senza Login (Deve dare 401 Not Authorized)
+GET {{baseUrl}}/users/history
+
+###
+
+### 4. Effettua il Login con l'utente inserito nel DB
+POST {{baseUrl}}/sessions
+Content-Type: application/json
+
+{
+  "email": "test@polito.it",
+  "password": "password"
+}
+
+###
+
+### 5. Verifica lo stato del Login corrente (Deve restituire i dati dell'utente)
+GET {{baseUrl}}/sessions/current
+
+###
+
+### 6. Avvio della partita come utente Loggato
+POST {{baseUrl}}/games/start
+Content-Type: application/json
+
+###
+
+### 7. Richiesta della cronologia dei match (Ora deve restituire l'array dei tuoi match passati)
+GET {{baseUrl}}/users/history
+
+###
+
+### 8. Effettua il Logout
+DELETE {{baseUrl}}/sessions/current
