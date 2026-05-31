@@ -53,9 +53,10 @@ passport.deserializeUser(function (user, cb) {
 
 //functions to manage  the session (contains info about game in progress)
 function clearSession(req) {
-    req.session.currentGameId = null;
-    req.session.cardsWon = 0;
-    req.session.roundsLost = 0;
+    req.session.startStationId = null;
+    req.session.currentStationId = null;
+    req.session.destinationStationId = null;
+    req.session.coins = null;
 }
 
 function setUpSession(req, startStation, destinationStation) {
@@ -66,7 +67,9 @@ function setUpSession(req, startStation, destinationStation) {
 }
 
 
-passport.use(new LocalStrategy(async function verify(username, password, cb) {
+passport.use(new LocalStrategy(
+  { usernameField: 'email', passwordField: 'password' }, 
+  async function verify(username, password, cb) {
     const user = await dao.getUser(username, password);
     if(!user)
         return cb(null, false, 'Incorrect username or password.');
@@ -147,7 +150,7 @@ app.post('/api/games/step', async (req, res) => {
 
     if (status === 'won' || status === 'lost') {
       const userId = req.isAuthenticated() ? req.user.id : null;
-      await dao.recordMatch(userId, req.session.startStationId, req.session.destinationStationId, req.session.coins);
+      await dao.SaveMatch(userId, req.session.startStationId, req.session.destinationStationId, req.session.coins);
       clearSession(req);
     }
 
@@ -166,15 +169,7 @@ app.post('/api/games/step', async (req, res) => {
   }
 });
 
-app.get('/api/users/history', isLoggedIn, async (req, res) => {
-  try {
-    const history = await dao.getUserMatchHistory(req.user.id);
-    res.json(history);
-  } catch (error) {
-    console.error('Error fetching user history:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
+
 
 
 // history api
