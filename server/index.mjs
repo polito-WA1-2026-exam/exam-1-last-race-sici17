@@ -73,3 +73,28 @@ passport.use(new LocalStrategy(async function verify(username, password, cb) {
 
     return cb(null, user);
 }));
+
+
+// user managment apiS
+app.post('/api/sessions', passport.authenticate('local'), (req,res) => {
+    res.status(201).json(req.user);
+});
+
+app.get('/api/sessions/current', (req, res) => {
+  if(req.isAuthenticated()) {
+    res.json(req.user);}
+  else
+    res.status(401).json({error: 'Not authenticated'});
+});
+
+app.delete('/api/sessions/current', (req, res) => {
+  req.logout(() => {
+    res.end();
+  });
+});
+
+
+
+
+
+// game management apis
