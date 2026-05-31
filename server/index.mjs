@@ -51,7 +51,7 @@ passport.deserializeUser(function (user, cb) {
   return cb(null, user);
 });
 
-//functions to manage session (contains info about game in progress)
+//functions to manage  the session (contains info about game in progress)
 function clearSession(req) {
     req.session.currentGameId = null;
     req.session.cardsWon = 0;
@@ -63,3 +63,13 @@ function setUpSession(req, newGameId) {
     req.session.cardsWon = 3;
     req.session.roundsLost = 0;
 }
+
+
+
+passport.use(new LocalStrategy(async function verify(username, password, cb) {
+    const user = await dao.getUser(username, password);
+    if(!user)
+        return cb(null, false, 'Incorrect username or password.');
+
+    return cb(null, user);
+}));
