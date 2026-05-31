@@ -9,15 +9,14 @@
 POST {{baseUrl}}/games/start
 Content-Type: application/json
 
-### 2. Esegui un passo (Sostituisci l'ID con uno di quelli ricevuti in 'nextSteps')
-# Nota: esegui questa chiamata più volte per muoverti finché non vinci o perdi!
+### 2. Esegui un passo
+### 2. Esegui un passo
 POST {{baseUrl}}/games/step
 Content-Type: application/json
 
 {
   "nextStationId": 2
 }
-
 
 ### ------------------------------------------------------------
 ### TEST UTENTE AUTENTICATO (Passport.js + Sessione)
