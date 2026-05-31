@@ -58,12 +58,12 @@ function clearSession(req) {
     req.session.roundsLost = 0;
 }
 
-function setUpSession(req, newGameId) {
-    req.session.currentGameId = newGameId;
-    req.session.cardsWon = 3;
-    req.session.roundsLost = 0;
+function setUpSession(req, startStation, destinationStation) {
+    req.session.startStationId = startStation.id;
+    req.session.currentStationId = startStation.id;
+    req.session.destinationStationId = destinationStation.id;
+    req.session.coins = 20; // Come richiesto dalla traccia
 }
-
 
 
 passport.use(new LocalStrategy(async function verify(username, password, cb) {
@@ -94,15 +94,12 @@ app.delete('/api/sessions/current', (req, res) => {
 });
 
 
-
-
-
 // game management apis
 
 // start match
 app.post('/api/games/start', async (req, res) => {
   try {
-    const route = await dao.getRandomRouteStations();
+    const route = await dao.getRandomStations();
     setUpSession(req, route.start, route.destination);
 
     const nextSteps = await dao.getAdjacentStations(route.start.id);
