@@ -190,3 +190,8 @@ app.get('/api/users/history', isLoggedIn, async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+
+
+app.listen(port, () => {
+  console.log(`Server listening at http://localhost:${port}`);
+});
