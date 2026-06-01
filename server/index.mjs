@@ -138,7 +138,7 @@ app.post('/api/games/execute', isLoggedIn, async (req, res) => {
     let isTimeout = false;
 
     const timeElapsed = Date.now() - req.session.startTime;
-    if (req.session.startTime && timeElapsed > 93000) {
+    if (req.session.startTime && timeElapsed > 90000) {
       isValid = false;
       isTimeout = true;
     }

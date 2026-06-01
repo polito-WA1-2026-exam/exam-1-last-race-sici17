@@ -226,9 +226,24 @@ const getGlobalRanking = () => {
 };
 
 
+const getNetworkMap = () => {
+    return new Promise((resolve, reject) => {
+        db.all('SELECT * FROM stations', [], (err, stations) => {
+            if (err) return reject(err);
+            db.all('SELECT * FROM lines', [], (err, lines) => {
+                if (err) return reject(err);
+                db.all('SELECT * FROM connections', [], (err, connections) => {
+                    if (err) return reject(err);
+                    resolve({ stations, lines, connections });
+                });
+            });
+        });
+    });
+};
+
 
 ////////////////////////////
 
-const DAO = {getUser, getRandomStations, getRandomEvent, getAdjacentStations, SaveMatch, getUserMatchHistory, getGlobalRanking};
+const DAO = {getUser, getRandomStations, getRandomEvent, getAdjacentStations, SaveMatch, getUserMatchHistory, getGlobalRanking, getNetworkMap};
 
 export default DAO;

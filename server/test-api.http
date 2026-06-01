@@ -7,7 +7,7 @@ POST http://localhost:3001/api/sessions
 Content-Type: application/json
 
 {
-  "username": "test@polito.it",
+  "email": "test@polito.it",
   "password": "password"
 }
 
@@ -19,7 +19,7 @@ GET http://localhost:3001/api/sessions/current
 ### --------------------------------------------------------
 
 ### Avvia una nuova partita (deve restituire 2 stazioni distanti almeno 3 fermate)
-GET http://localhost:3001/api/games/start
+POST http://localhost:3001/api/games/start
 
 ### Esegui l'intero percorso calcolato in un solo colpo 
 ### (ATTENZIONE: Modifica l'array "route" con gli ID stazione validi dalla tua partenza alla tua destinazione)
@@ -27,7 +27,7 @@ POST http://localhost:3001/api/games/execute
 Content-Type: application/json
 
 {
-  "route": [2, 5, 8]
+  "route": [9, 4, 8, 2]
 }
 
 ### --------------------------------------------------------
