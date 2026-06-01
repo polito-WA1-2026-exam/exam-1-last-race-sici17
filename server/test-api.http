@@ -1,58 +1,59 @@
-### Configurazione globale delle variabili per il test
-@baseUrl = http://localhost:3001/api
+### --------------------------------------------------------
+### API DI AUTENTICAZIONE
+### --------------------------------------------------------
 
-### ------------------------------------------------------------
-### TEST UTENTE ANONIMO (Gestito interamente tramite Sessione)
-### ------------------------------------------------------------
-
-### 1. Avvio della partita come Anonimo
-POST {{baseUrl}}/games/start
-Content-Type: application/json
-
-### 2. Esegui un passo
-### 2. Esegui un passo
-POST {{baseUrl}}/games/step
+### Effettua il login come utente di test
+POST http://localhost:3001/api/sessions
 Content-Type: application/json
 
 {
-  "nextStationId": 2
-}
-
-### ------------------------------------------------------------
-### TEST UTENTE AUTENTICATO (Passport.js + Sessione)
-### ------------------------------------------------------------
-
-### 3. Tentativo di accesso alla cronologia senza Login (Deve dare 401 Not Authorized)
-GET {{baseUrl}}/users/history
-
-###
-
-### 4. Effettua il Login con l'utente inserito nel DB
-POST {{baseUrl}}/sessions
-Content-Type: application/json
-
-{
-  "email": "test@polito.it",
+  "username": "test@polito.it",
   "password": "password"
 }
 
-###
+### Verifica la sessione corrente
+GET http://localhost:3001/api/sessions/current
 
-### 5. Verifica lo stato del Login corrente (Deve restituire i dati dell'utente)
-GET {{baseUrl}}/sessions/current
+### --------------------------------------------------------
+### API DI GIOCO (Richiedono Autenticazione)
+### --------------------------------------------------------
 
-###
+### Avvia una nuova partita (deve restituire 2 stazioni distanti almeno 3 fermate)
+GET http://localhost:3001/api/games/start
 
-### 6. Avvio della partita come utente Loggato
-POST {{baseUrl}}/games/start
+### Esegui l'intero percorso calcolato in un solo colpo 
+### (ATTENZIONE: Modifica l'array "route" con gli ID stazione validi dalla tua partenza alla tua destinazione)
+POST http://localhost:3001/api/games/execute
 Content-Type: application/json
 
-###
+{
+  "route": [2, 5, 8]
+}
 
-### 7. Richiesta della cronologia dei match (Ora deve restituire l'array dei tuoi match passati)
-GET {{baseUrl}}/users/history
+### --------------------------------------------------------
+### API DELLE STATISTICHE
+### --------------------------------------------------------
 
-###
+### Recupera lo storico delle partite dell'utente loggato
+GET http://localhost:3001/api/users/history
 
-### 8. Effettua il Logout
-DELETE {{baseUrl}}/sessions/current
+### Recupera la classifica generale (Highscore di ogni utente)
+GET http://localhost:3001/api/games/ranking
+
+### --------------------------------------------------------
+### LOGOUT & TEST DI SICUREZZA
+### --------------------------------------------------------
+
+### Effettua il logout
+DELETE http://localhost:3001/api/sessions/current
+
+### Test Sicurezza: Prova ad avviare una partita da Visitatore (Deve fallire con 401 Unauthorized)
+GET http://localhost:3001/api/games/start
+
+### Test Sicurezza: Prova ad inviare un percorso da Visitatore (Deve fallire con 401 Unauthorized)
+POST http://localhost:3001/api/games/execute
+Content-Type: application/json
+
+{
+  "route": [2, 5, 8]
+}

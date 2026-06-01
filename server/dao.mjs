@@ -209,7 +209,7 @@ const getUserMatchHistory = (userId) => {
 const getGlobalRanking = () => {
   return new Promise((resolve, reject) => {
     const query = `
-      SELECT users.id, users.name, MAX(matches.score) as highscore
+      SELECT users.id, users.name, MAX(matches.final_score) as highscore
       FROM matches
       JOIN users ON matches.user_id = users.id
       GROUP BY users.id
@@ -229,6 +229,6 @@ const getGlobalRanking = () => {
 
 ////////////////////////////
 
-const DAO = {getUser, getRandomStations, getRandomEvent, getAdjacentStations, SaveMatch, getUserMatchHistory};
+const DAO = {getUser, getRandomStations, getRandomEvent, getAdjacentStations, SaveMatch, getUserMatchHistory, getGlobalRanking};
 
 export default DAO;

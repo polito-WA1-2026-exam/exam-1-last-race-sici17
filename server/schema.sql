@@ -70,10 +70,10 @@ INSERT INTO stations (name, is_interchange) VALUES ('Fontana Oscura', 1);
 INSERT INTO stations (name, is_interchange) VALUES ('Torre Cinerea', 1);
 -- Altre stazioni
 INSERT INTO stations (name, is_interchange) VALUES ('Crocevia del Falco', 0);
-INSERT INTO stations (name, is_interchange) VALUES ('Piazza delle Lanterne', 0);
+INSERT INTO stations (name, is_interchange) VALUES ('Piazza delle Lanterne', 1);
 INSERT INTO stations (name, is_interchange) VALUES ('Borgo Sereno', 0);
-INSERT INTO stations (name, is_interchange) VALUES ('Viale dei Mosaici', 0);
-INSERT INTO stations (name, is_interchange) VALUES ('Campo dell''Eco', 0);
+INSERT INTO stations (name, is_interchange) VALUES ('Viale dei Mosaici', 1);
+INSERT INTO stations (name, is_interchange) VALUES ('Campo dell''Eco', 1);
 INSERT INTO stations (name, is_interchange) VALUES ('Quartiere Olmi', 0);
 INSERT INTO stations (name, is_interchange) VALUES ('Parco Nord', 0);
 INSERT INTO stations (name, is_interchange) VALUES ('Stazione Est', 0);
@@ -117,9 +117,9 @@ INSERT INTO events (description, coin_modifier) VALUES ('Generous stranger paid 
 -- Nota: Per fare le cose fatte bene come l'alunno, la password nel DB deve essere l'hash+salt. 
 -- Per ora inseriamo un utente finto, poi useremo una funzione Node per fare l'inserimento corretto.
 INSERT INTO users (email, name, hash, salt) VALUES 
-('test@polito.it', 'Test User', '539488544652f5844ceb906919dfd7dd', '85c2ae1f05a34577698c3fa9191249bb490444ef45ac6de5ba058a0b31f0436e'),
-('mario.rossi@polito.it', 'Mario Rossi', '539488544652f5844ceb906919dfd7dd', '85c2ae1f05a34577698c3fa9191249bb490444ef45ac6de5ba058a0b31f0436e'),
-('luigi.verdi@polito.it', 'Luigi Verdi', '539488544652f5844ceb906919dfd7dd', '85c2ae1f05a34577698c3fa9191249bb490444ef45ac6de5ba058a0b31f0436e');
+('test@polito.it', 'Test User', '83eabb8a686aec81375626273adcc5fccc144df0b4fc8a0fd3c1d5d7e88109fc', '012a640ff8e45e1ef68eba1ca9afda01'),
+('mario.rossi@polito.it', 'Mario Rossi', '83eabb8a686aec81375626273adcc5fccc144df0b4fc8a0fd3c1d5d7e88109fc', '012a640ff8e45e1ef68eba1ca9afda01'),
+('luigi.verdi@polito.it', 'Luigi Verdi', '83eabb8a686aec81375626273adcc5fccc144df0b4fc8a0fd3c1d5d7e88109fc', '012a640ff8e45e1ef68eba1ca9afda01');
 
 
 

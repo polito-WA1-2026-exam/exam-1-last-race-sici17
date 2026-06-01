@@ -57,13 +57,15 @@ function clearSession(req) {
     req.session.currentStationId = null;
     req.session.destinationStationId = null;
     req.session.coins = null;
+    req.session.startTime = null;
 }
 
 function setUpSession(req, startStation, destinationStation) {
     req.session.startStationId = startStation.id;
     req.session.currentStationId = startStation.id;
     req.session.destinationStationId = destinationStation.id;
-    req.session.coins = 20; // Come richiesto dalla traccia
+    req.session.coins = 20; 
+    req.session.startTime = Date.now(); 
 }
 
 
@@ -133,21 +135,51 @@ app.post('/api/games/execute', isLoggedIn, async (req, res) => {
     let currentStationId = req.session.startStationId;
     let coins = req.session.coins; // parte da 20
     let isValid = true;
+    let isTimeout = false;
+
+    const timeElapsed = Date.now() - req.session.startTime;
+    if (req.session.startTime && timeElapsed > 93000) {
+      isValid = false;
+      isTimeout = true;
+    }
 
     // validazione del percorso inviato
+  if(!isTimeout){
     if (route.length === 0 || parseInt(route[route.length - 1]) !== req.session.destinationStationId) {
       isValid = false;
     } else {
-      // controllo adiacenze
+      // controllo adiacenze e cambi linea
+      let currentLine = null;
+      let isCurrentStationInterchange = 1; // Default a 1 per la partenza (il primo spostamento è sempre valido)
+
       for (const nextStationId of route) {
         const validSteps = await dao.getAdjacentStations(currentStationId);
-        if (!validSteps.some(s => s.id === parseInt(nextStationId))) {
+        
+        // Troviamo i dettagli specifici del segmento che l'utente vuole percorrere
+        const stepInfo = validSteps.find(s => s.id === parseInt(nextStationId));
+
+        // Se non c'è collegamento, il percorso non è valido
+        if (!stepInfo) {
           isValid = false;
           break;
         }
+
+        // Se stiamo già viaggiando su una linea e la linea del prossimo segmento è diversa...
+        if (currentLine !== null && currentLine !== stepInfo.lineName) {
+          // ...dobbiamo assicurarci che la stazione da cui stiamo partendo sia un interscambio!
+          if (isCurrentStationInterchange === 0) {
+            isValid = false; // Cambio di linea illegale!
+            break;
+          }
+        }
+
+        // Aggiorniamo le variabili per il ciclo successivo
+        currentLine = stepInfo.lineName; 
+        isCurrentStationInterchange = stepInfo.isInterchange; // Salviamo se la stazione in cui arriviamo ora è un interscambio
         currentStationId = parseInt(nextStationId);
       }
     }
+  }
 
     const userId = req.isAuthenticated() ? req.user.id : null;
 
@@ -168,9 +200,7 @@ app.post('/api/games/execute', isLoggedIn, async (req, res) => {
     const executionSteps = [];
     currentStationId = req.session.startStationId;
 
-    for (const nextStationId of route) {
-      coins -= 1; // costo per spostarsi 
-      
+    for (const nextStationId of route) {      
       const event = await dao.getRandomEvent();
       coins += event.coinModifier;
       
