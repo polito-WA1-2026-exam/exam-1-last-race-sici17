@@ -100,7 +100,7 @@ app.delete('/api/sessions/current', (req, res) => {
 // game management apis
 
 // start match
-app.post('/api/games/start', async (req, res) => {
+app.post('/api/games/start',isLoggedIn, async (req, res) => {
   try {
     const route = await dao.getRandomStations();
     setUpSession(req, route.start, route.destination);
@@ -120,51 +120,95 @@ app.post('/api/games/start', async (req, res) => {
   }
 });
 
-// user roaming
-app.post('/api/games/step', async (req, res) => {
+// user route execution
+app.post('/api/games/execute', isLoggedIn, async (req, res) => {
   try {
-    if (!req.session.currentStationId)
+    if (!req.session.startStationId || !req.session.destinationStationId)
       return res.status(403).json({ error: 'No game in progress' });
 
-    const { nextStationId } = req.body;
+    const { route } = req.body; 
+    if (!route || !Array.isArray(route))
+      return res.status(422).json({ error: 'Invalid route format' });
 
-    const validSteps = await dao.getAdjacentStations(req.session.currentStationId);
-    const isValid = validSteps.some(s => s.id === parseInt(nextStationId));
+    let currentStationId = req.session.startStationId;
+    let coins = req.session.coins; // parte da 20
+    let isValid = true;
 
-    if (!isValid)
-      return res.status(422).json({ error: 'Invalid position' });
-
-    req.session.coins -= 1;
-    req.session.currentStationId = parseInt(nextStationId);
-
-    const event = await dao.getRandomEvent();
-    req.session.coins += event.coinModifier;
-
-    let status = 'playing';
-    if (req.session.currentStationId === req.session.destinationStationId && req.session.coins >= 0) {
-      status = 'won';
-    } else if (req.session.coins <= 0) {
-      status = 'lost';
-      if (req.session.coins < 0) req.session.coins = 0;
+    // validazione del percorso inviato
+    if (route.length === 0 || parseInt(route[route.length - 1]) !== req.session.destinationStationId) {
+      isValid = false;
+    } else {
+      // controllo adiacenze
+      for (const nextStationId of route) {
+        const validSteps = await dao.getAdjacentStations(currentStationId);
+        if (!validSteps.some(s => s.id === parseInt(nextStationId))) {
+          isValid = false;
+          break;
+        }
+        currentStationId = parseInt(nextStationId);
+      }
     }
 
-    if (status === 'won' || status === 'lost') {
-      const userId = req.isAuthenticated() ? req.user.id : null;
-      await dao.SaveMatch(userId, req.session.startStationId, req.session.destinationStationId, req.session.coins);
+    const userId = req.isAuthenticated() ? req.user.id : null;
+
+    // failed path
+    if (!isValid) {
+      coins = 0; 
+      await dao.SaveMatch(userId, req.session.startStationId, req.session.destinationStationId, coins);
       clearSession(req);
+      
+      return res.status(200).json({
+        valid: false,
+        finalScore: coins,
+        message: 'Invalid or incomplete route. You lost all your coins.'
+      });
     }
 
-    const nextSteps = status === 'playing' ? await dao.getAdjacentStations(req.session.currentStationId) : [];
+    // 3. correct path
+    const executionSteps = [];
+    currentStationId = req.session.startStationId;
+
+    for (const nextStationId of route) {
+      coins -= 1; // costo per spostarsi 
+      
+      const event = await dao.getRandomEvent();
+      coins += event.coinModifier;
+      
+      executionSteps.push({
+        stationId: parseInt(nextStationId),
+        event: event,
+        coinsAfterEvent: coins
+      });
+      
+      currentStationId = parseInt(nextStationId);
+    }
+
+    // "If the final score is negative it will be stored and shown as zero"
+    if (coins < 0) {
+      coins = 0;
+    }
+
+    await dao.SaveMatch(userId, req.session.startStationId, req.session.destinationStationId, coins);
+    clearSession(req);
 
     res.status(200).json({
-      status: status,
-      currentStationId: req.session.currentStationId,
-      coins: req.session.coins,
-      appliedEvent: event,
-      nextSteps: nextSteps
+      valid: true,
+      finalScore: coins,
+      executionSteps: executionSteps
     });
+
   } catch (error) {
-    console.error('Error processing step:', error);
+    console.error('Error executing route:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.get('/api/games/ranking', isLoggedIn, async (req, res) => {
+  try {
+    const ranking = await dao.getGlobalRanking();
+    res.status(200).json(ranking);
+  } catch (error) {
+    console.error('Error fetching global ranking:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });

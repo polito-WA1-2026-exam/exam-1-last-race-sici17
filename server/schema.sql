@@ -116,4 +116,20 @@ INSERT INTO events (description, coin_modifier) VALUES ('Generous stranger paid 
 -- Inserimento di un utente di test (Password: 'password')
 -- Nota: Per fare le cose fatte bene come l'alunno, la password nel DB deve essere l'hash+salt. 
 -- Per ora inseriamo un utente finto, poi useremo una funzione Node per fare l'inserimento corretto.
-INSERT INTO users (email, name, hash, salt) VALUES ('test@polito.it', 'Mario Rossi', '12345', 'abcde');
+INSERT INTO users (email, name, hash, salt) VALUES 
+('test@polito.it', 'Test User', '539488544652f5844ceb906919dfd7dd', '85c2ae1f05a34577698c3fa9191249bb490444ef45ac6de5ba058a0b31f0436e'),
+('mario.rossi@polito.it', 'Mario Rossi', '539488544652f5844ceb906919dfd7dd', '85c2ae1f05a34577698c3fa9191249bb490444ef45ac6de5ba058a0b31f0436e'),
+('luigi.verdi@polito.it', 'Luigi Verdi', '539488544652f5844ceb906919dfd7dd', '85c2ae1f05a34577698c3fa9191249bb490444ef45ac6de5ba058a0b31f0436e');
+
+
+
+-- Inserimento di alcune partite per i primi 2 utenti
+-- Aggiunta la colonna "date" per rispettare il vincolo NOT NULL
+INSERT INTO matches (user_id, start_station_id, destination_station_id, final_score, date) VALUES 
+-- Partite per l'utente 1 (Test User)
+(1, 1, 5, 12, '2026-06-01'),
+(1, 2, 8, 5, '2026-06-02'),
+
+-- Partite per l'utente 2 (Mario Rossi)
+(2, 3, 7, 18, '2026-06-03'),
+(2, 4, 9, 21, '2026-06-04');

@@ -37,24 +37,70 @@ export const getUser = (email, password) => {
 
 // functions to manage the actual game
 
-// estrazione delle stazioni casuali per decidere partenza e arrivo
+const getRandomStations = async () => {
 
-const getRandomStations = () => {
-    return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM stations ORDER BY RANDOM() LIMIT 2';
-        db.all(sql, [], (err, rows) => {
-            if (err) {
-                reject(err);
-            } else if (rows.length < 2) {
-                reject(new Error("Stazioni insufficienti nel database"));
-            } else {
-                resolve({
-                    start: { id: rows[0].id, name: rows[0].name, isInterchange: rows[0].is_interchange },
-                    destination: { id: rows[1].id, name: rows[1].name, isInterchange: rows[1].is_interchange }
-                });
-            }
+    const getAllStations = () => new Promise((resolve, reject) => {
+        db.all('SELECT * FROM stations', [], (err, rows) => {
+            if (err) reject(err);
+            else resolve(rows);
         });
     });
+    
+    const getAllConnections = () => new Promise((resolve, reject) => {
+        db.all('SELECT station_a_id, station_b_id FROM connections', [], (err, rows) => {
+            if (err) reject(err);
+            else resolve(rows);
+        });
+    });
+
+    try {
+        const stations = await getAllStations();
+        const connections = await getAllConnections();
+
+        // grafo delle adiacenze 
+        const graph = {};
+        stations.forEach(s => graph[s.id] = []);
+        connections.forEach(c => {
+            graph[c.station_a_id].push(c.station_b_id);
+            graph[c.station_b_id].push(c.station_a_id);
+        });
+
+        const shuffledStations = stations.sort(() => 0.5 - Math.random());
+
+        // Breadth-First Search
+        for (const startStation of shuffledStations) {
+            const distances = {};
+            const queue = [startStation.id];
+            distances[startStation.id] = 0;
+
+            // Calcoliamo la distanza minima dalla stazione di partenza a tutte le altre
+            while (queue.length > 0) {
+                const current = queue.shift();
+                for (const neighbor of graph[current]) {
+                    if (distances[neighbor] === undefined) {
+                        distances[neighbor] = distances[current] + 1;
+                        queue.push(neighbor);
+                    }
+                }
+            }
+
+            // Filtriamo solo le destinazioni raggiungibili che distano ALMENO 3 fermate
+            const validDestinations = stations.filter(s => distances[s.id] >= 3);
+
+            // Se troviamo destinazioni valide, ne scegliamo una a caso e restituiamo la coppia
+            if (validDestinations.length > 0) {
+                const destStation = validDestinations[Math.floor(Math.random() * validDestinations.length)];
+                return {
+                    start: { id: startStation.id, name: startStation.name, isInterchange: startStation.is_interchange },
+                    destination: { id: destStation.id, name: destStation.name, isInterchange: destStation.is_interchange }
+                };
+            }
+        }
+        
+        throw new Error("Impossibile trovare due stazioni con distanza minima di 3 fermate nella rete attuale.");
+    } catch (error) {
+        throw error;
+    }
 };
 
 
@@ -156,6 +202,30 @@ const getUserMatchHistory = (userId) => {
         });
     });
 };
+
+
+
+
+const getGlobalRanking = () => {
+  return new Promise((resolve, reject) => {
+    const query = `
+      SELECT users.id, users.name, MAX(matches.score) as highscore
+      FROM matches
+      JOIN users ON matches.user_id = users.id
+      GROUP BY users.id
+      ORDER BY highscore DESC
+    `;
+    db.all(query, [], (err, rows) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(rows);
+      }
+    });
+  });
+};
+
+
 
 ////////////////////////////
 
