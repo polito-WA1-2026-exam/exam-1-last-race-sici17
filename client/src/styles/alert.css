@@ -1,0 +1,249 @@
+.alert {
+    position: relative;
+    margin: 1.5rem 0;
+    padding: 1rem 1.5rem;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    animation: slideInDown 0.4s ease-out;
+    overflow: hidden;
+}
+
+.alert::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, currentColor, transparent);
+    animation: shimmer 2s ease-in-out infinite;
+}
+
+/* Animazioni */
+@keyframes slideInDown {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes shimmer {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+}
+
+/* Varianti di colore */
+.alert-success {
+    background: linear-gradient(135deg, 
+        rgba(40, 167, 69, 0.15), 
+        rgba(32, 201, 151, 0.15)
+    );
+    border-left: 5px solid #28a745;
+    color: #155724;
+}
+
+.alert-success::before {
+    background: linear-gradient(90deg, 
+        transparent, 
+        #28a745, 
+        #20c997, 
+        transparent
+    );
+}
+
+.alert-danger {
+    background: linear-gradient(135deg, 
+        rgba(220, 53, 69, 0.15), 
+        rgba(231, 76, 60, 0.15)
+    );
+    border-left: 5px solid #dc3545;
+    color: #721c24;
+}
+
+.alert-danger::before {
+    background: linear-gradient(90deg, 
+        transparent, 
+        #dc3545, 
+        #e74c3c, 
+        transparent
+    );
+}
+
+.alert-info {
+    background: linear-gradient(135deg, 
+        rgba(23, 162, 184, 0.15), 
+        rgba(52, 144, 220, 0.15)
+    );
+    border-left: 5px solid #17a2b8;
+    color: #0c5460;
+}
+
+.alert-info::before {
+    background: linear-gradient(90deg, 
+        transparent, 
+        #17a2b8, 
+        #3490dc, 
+        transparent
+    );
+}
+
+.alert-warning {
+    background: linear-gradient(135deg, 
+        rgba(255, 193, 7, 0.15), 
+        rgba(255, 159, 26, 0.15)
+    );
+    border-left: 5px solid #ffc107;
+    color: #856404;
+}
+
+.alert-warning::before {
+    background: linear-gradient(90deg, 
+        transparent, 
+        #ffc107, 
+        #ff9f1a, 
+        transparent
+    );
+}
+
+/* Icone per i diversi tipi di alert */
+.alert-success::after {
+    content: '✅';
+    position: absolute;
+    top: 50%;
+    right: 3.5rem;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
+    opacity: 0.7;
+}
+
+.alert-danger::after {
+    content: '❌';
+    position: absolute;
+    top: 50%;
+    right: 3.5rem;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
+    opacity: 0.7;
+}
+
+.alert-info::after {
+    content: 'ℹ️';
+    position: absolute;
+    top: 50%;
+    right: 3.5rem;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
+    opacity: 0.7;
+}
+
+.alert-warning::after {
+    content: '⚠️';
+    position: absolute;
+    top: 50%;
+    right: 3.5rem;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
+    opacity: 0.7;
+}
+
+/* Pulsante di chiusura personalizzato */
+.alert .btn-close,
+.alert button.btn-close {
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.1);
+    border: none;
+    font-size: 1.2rem;
+    opacity: 0.8;
+    transition: all 0.3s ease;
+    padding: 0.25rem;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: currentColor;
+    position: absolute;
+}
+
+.alert .btn-close:hover {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.2);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.alert .btn-close:focus {
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+    outline: none;
+}
+
+.alert .btn-close::before {
+    content: '✕';
+    font-weight: bold;
+    line-height: 1;
+}
+
+/* Stile del testo dell'alert */
+.alert {
+    font-weight: 500;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+/* Container per gli alert */
+.alert-container {
+    position: relative;
+    z-index: 1000;
+    margin-top: 10px; /* Ridotto lo spazio dalla navbar */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .alert {
+        margin: 1rem 0;
+        padding: 1rem;
+        border-radius: 12px;
+    }
+    
+    .alert::after {
+        right: 3rem;
+        font-size: 1rem;
+    }
+    
+    .alert .btn-close {
+        right: 0.75rem;
+        width: 24px;
+        height: 24px;
+    }
+}
+
+/* Effetto hover per gli alert interattivi */
+.alert:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+}
+
+/* Effetto di dissolvenza quando l'alert viene chiuso */
+.alert.fade-out {
+    animation: fadeOut 0.3s ease-in forwards;
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}

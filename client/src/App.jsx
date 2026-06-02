@@ -8,6 +8,8 @@ import NavbarComponent from "./components/NavbarComponent.jsx";
 // import LoginPage from "./components/LoginPage.jsx";
 // import ListOfSomething from "./components/List.jsx"; // Riferimento al tuo README
 // import API from "./API.mjs";
+
+
 function App() {
     const [loggedIn, setLoggedIn] = useState(false);
     const [user, setUser] = useState(null);
@@ -82,15 +84,16 @@ function App() {
                     user={user}
                 />
             }>
-                <Route path="/" element={<HomePage loggedIn={loggedIn} user={user}/>} />
-                <Route path="/login" element={<LoginPage handleLogin={handleLogin} loggedIn={loggedIn}/>}/>
-                <Route path="/demo" element={<DemoGamePage setMessage={setMessage}/>}/>
-                <Route path="/game" element={<MainGamePage setMessage={setMessage}/>}/>
-                <Route path="/profile" element={<ProfileHistory/>}/>
-                <Route path="*" element={<NotFound />} />
+                {/* Rotte basate sul tuo README.md */}
+                {/* <Route path="/" element={<HomePage loggedIn={loggedIn} user={user}/>} /> */}
+                {/* <Route path="/login" element={<LoginPage handleLogin={handleLogin} loggedIn={loggedIn}/>}/> */}
+                {/* <Route path="/something/:param" element={<ListOfSomething setMessage={setMessage}/>}/> */}
+                
+                {/* Rotta di fallback */}
+                <Route path="*" element={<h2>Pagina non trovata</h2>} />
             </Route>
         </Routes>
-    )
+          )
 }
 
 export default App
