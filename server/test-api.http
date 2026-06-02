@@ -27,7 +27,7 @@ POST http://localhost:3001/api/games/execute
 Content-Type: application/json
 
 {
-  "route": [9, 4, 8, 2]
+  "route": [4, 6, 10]
 }
 
 ### --------------------------------------------------------
@@ -48,7 +48,7 @@ GET http://localhost:3001/api/games/ranking
 DELETE http://localhost:3001/api/sessions/current
 
 ### Test Sicurezza: Prova ad avviare una partita da Visitatore (Deve fallire con 401 Unauthorized)
-GET http://localhost:3001/api/games/start
+POST  http://localhost:3001/api/games/start
 
 ### Test Sicurezza: Prova ad inviare un percorso da Visitatore (Deve fallire con 401 Unauthorized)
 POST http://localhost:3001/api/games/execute

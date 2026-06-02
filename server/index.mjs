@@ -137,7 +137,7 @@ app.post('/api/games/execute', isLoggedIn, async (req, res) => {
     let isValid = true;
     let isTimeout = false;
 
-    const timeElapsed = Date.now() - req.session.startTime;
+    const timeElapsed = Date.now()-req.session.startTime;
     if (req.session.startTime && timeElapsed > 90000) {
       isValid = false;
       isTimeout = true;
@@ -196,7 +196,7 @@ app.post('/api/games/execute', isLoggedIn, async (req, res) => {
       });
     }
 
-    // 3. correct path
+    // correct path
     const executionSteps = [];
     currentStationId = req.session.startStationId;
 
@@ -239,6 +239,15 @@ app.get('/api/games/ranking', isLoggedIn, async (req, res) => {
     res.status(200).json(ranking);
   } catch (error) {
     console.error('Error fetching global ranking:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.get('/api/network', async (req, res) => {
+  try {
+    const network = await dao.getNetworkMap();
+    res.json(network);
+  } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
