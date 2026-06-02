@@ -1,122 +1,96 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
-
+import { Route, Routes, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Spinner } from "react-bootstrap";
+import DefaultLayout from "./components/DefaultLayout.jsx";
+import NavbarComponent from "./components/NavbarComponent.jsx";
+// Importa qui i componenti che creerai per il tuo progetto
+// import HomePage from "./components/HomePage.jsx";
+// import LoginPage from "./components/LoginPage.jsx";
+// import ListOfSomething from "./components/List.jsx"; // Riferimento al tuo README
+// import API from "./API.mjs";
 function App() {
-  const [count, setCount] = useState(0)
+    const [loggedIn, setLoggedIn] = useState(false);
+    const [user, setUser] = useState(null);
+    const [message, setMessage] = useState({});
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
-  return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    //check if user is already logged in on app start
+    useEffect(() => {
+        const checkAuth = async () => {
+            setLoading(true);
+            try {
+                const userData = await API.getCurrentUser();
+                if (userData) {
+                    setLoggedIn(true);
+                    setUser(userData);
+                }
+            } catch (error) {
+                console.log('No active session');
+            } finally {
+                setLoading(false);
+            }
+        };
 
-      <div className="ticks"></div>
+        checkAuth();
+    }, []);
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+    const handleLogin = async (credentials) => {
+        try {
+            const userData = await API.login(credentials);
+            setLoggedIn(true);
+            setUser(userData);
+            setMessage({msg: "Login effettuato con successo.", type: 'success'});
+            return true;
+        } catch (error) {
+            setMessage({ msg: "Credenziali non valide. Riprova.", type: 'danger' });
+            return false;
+        }
+    };
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+    const handleLogout = async () => {
+        try {
+            await API.logout();
+            setLoggedIn(false);
+            setUser(null);
+            setMessage({ msg: 'Logout effettuato con successo', type: 'info' });
+            navigate('/');
+        } catch (error) {
+            setMessage({ msg: 'Errore durante il logout', type: 'danger' });
+        }
+    };
+
+    //show loading spinner while checking authentication
+    if (loading) {
+        return (
+            <div className="d-flex justify-content-center align-items-center vh-100">
+                <Spinner animation="border" role="status" variant="primary">
+                    <span className="visually-hidden">Loading...</span>
+                </Spinner>
+            </div>
+        );
+    }
+
+    return (
+        <Routes>
+            <Route element={
+                <DefaultLayout
+                    loggedIn={loggedIn}
+                    handleLogout={handleLogout}
+                    message={message}
+                    setMessage={setMessage}
+                    user={user}
+                />
+            }>
+                <Route path="/" element={<HomePage loggedIn={loggedIn} user={user}/>} />
+                <Route path="/login" element={<LoginPage handleLogin={handleLogin} loggedIn={loggedIn}/>}/>
+                <Route path="/demo" element={<DemoGamePage setMessage={setMessage}/>}/>
+                <Route path="/game" element={<MainGamePage setMessage={setMessage}/>}/>
+                <Route path="/profile" element={<ProfileHistory/>}/>
+                <Route path="*" element={<NotFound />} />
+            </Route>
+        </Routes>
+    )
 }
 
 export default App
