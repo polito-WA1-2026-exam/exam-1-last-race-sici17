@@ -1,54 +1,31 @@
-import { Alert, Container, Row, Col } from "react-bootstrap";
-import { Outlet } from "react-router";
-import NavbarComponent from "./NavbarComponent.jsx";
-import "../styles/Alert.css"
+import React from 'react';
+import { Outlet } from 'react-router-dom';
+import { Container, Alert } from 'react-bootstrap';
+import NavbarComponent from './NavbarComponent.jsx'; // <-- Assicurati che l'import sia corretto
 
-function DefaultLayout(props) {
-    const handleCloseAlert = () => {
-        //fade out effect on alert closing
-        const alertElement = document.querySelector('.alert');
-        if (alertElement) {
-            alertElement.classList.add('fade-out');
-            setTimeout(() => {
-                props.setMessage('');
-            }, 300);
-        } else {
-            props.setMessage('');
-        }
-    };
-
-    return(
+const DefaultLayout = (props) => {
+    return (
         <>
-            <NavbarComponent
-                loggedIn={props.loggedIn}
-                onLogout={props.handleLogout}
+            {/* La Navbar DEVE essere inserita qui dentro, prima del Container */}
+            <NavbarComponent 
+                loggedIn={props.loggedIn} 
+                handleLogout={props.handleLogout} 
+                user={props.user} 
             />
+            
+            {/* Aggiungiamo il margine per non far finire i contenuti sotto la navbar fissa */}
+            <Container style={{ marginTop: '90px' }}> 
+                {props.message && props.message.msg && (
+                    <Alert variant={props.message.type} onClose={() => props.setMessage({})} dismissible>
+                        {props.message.msg}
+                    </Alert>
+                )}
 
-            {/* Container for alerts */}
-            {props.message?.msg && (
-                <div className="alert-container">
-                    <Container>
-                        <Row className="justify-content-center">
-                            <Col xs={12} md={10} lg={8}>
-                                <Alert
-                                    variant={props.message.type}
-                                    onClose={handleCloseAlert}
-                                    dismissible
-                                    className="custom-alert"
-                                >
-                                    {props.message.msg}
-                                </Alert>
-                            </Col>
-                        </Row>
-                    </Container>
-                </div>
-            )}
-
-            <div className="main-content">
+                {/* Qui vengono renderizzate le sotto-pagine (Home, Login, ecc.) */}
                 <Outlet />
-            </div>
+            </Container>
         </>
     );
-}
+};
 
 export default DefaultLayout;

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Form, Button, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
-import '../styles/LoginPage.css';
 
 const LoginPage = ({ handleLogin, loggedIn }) => {
     const [email, setEmail] = useState('');

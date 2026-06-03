@@ -6,6 +6,7 @@ import "../../styles/GamePlay.css";
 const GamePlay = (props) => {
     const { gameData, network, route, timeLeft, handleSegmentSelect, handleConfirmRoute, gameStats } = props;
     const allSegments = network.segments || [];
+    const allStations = network.stations || [];
 
     return (
         <Row className="min-vh-100 align-items-center justify-content-center py-4">
@@ -71,6 +72,20 @@ const GamePlay = (props) => {
             </Col>
 
             <Col xs={12} lg={7}>
+                <Card className="shadow mb-4">
+                    <Card.Header className="bg-info text-white py-2">
+                        <h5 className="text-center mb-0">📍 Mappa Stazioni (Senza Linee)</h5>
+                    </Card.Header>
+                    <Card.Body className="p-3 text-center">
+                        <div className="d-flex flex-wrap justify-content-center gap-2">
+                            {allStations.map((station, idx) => (
+                                <Badge bg="secondary" key={idx} className="p-2 fs-6 shadow-sm">
+                                    {station.name || station}
+                                </Badge>
+                            ))}
+                        </div>
+                    </Card.Body>
+                </Card>
                 <Card className="shadow mb-4">
                     <Card.Header className="bg-primary text-white py-3">
                         <h5 className="text-center mb-0">🔀 Collegamenti Disponibili (Linee Svanite)</h5>

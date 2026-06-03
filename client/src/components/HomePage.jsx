@@ -1,7 +1,6 @@
 import React from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
-import '../styles/HomePage.css';
 
 const HomePage = ({ loggedIn, user }) => {
     const navigate = useNavigate();

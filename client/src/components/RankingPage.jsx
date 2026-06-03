@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Card, Table, Spinner, Alert } from 'react-bootstrap';
 import API from '../API/API.mjs';
-import '../styles/ProfileHistory.css'; // Puoi rinominarlo in RankingPage.css o riutilizzare gli stili
 
 const RankingPage = () => {
     const [ranking, setRanking] = useState([]);

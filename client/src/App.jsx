@@ -3,11 +3,11 @@ import { useState, useEffect } from "react";
 import { Spinner } from "react-bootstrap";
 import DefaultLayout from "./components/DefaultLayout.jsx";
 import NavbarComponent from "./components/NavbarComponent.jsx";
-// Importa qui i componenti che creerai per il tuo progetto
-// import HomePage from "./components/HomePage.jsx";
-// import LoginPage from "./components/LoginPage.jsx";
-// import ListOfSomething from "./components/List.jsx"; // Riferimento al tuo README
-// import API from "./API.mjs";
+import HomePage from "./components/HomePage.jsx";
+import LoginPage from "./components/LoginPage.jsx";
+import GamePage from "./components/GamePage.jsx";
+import RankingPage from "./components/RankingPage.jsx"; 
+import API from "./API/API.mjs";
 
 
 function App() {

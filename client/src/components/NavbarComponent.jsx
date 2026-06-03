@@ -17,14 +17,14 @@ const NavbarComponent = (props) => {
                         <Nav.Link onClick={() => navigate('/')}>Home</Nav.Link>
                         {props.loggedIn && (
                             <>
-                                {/* Aggiungi qui le rotte protette che ti servono (es. /something) */}
-                                <Nav.Link onClick={() => navigate('/something/myparam')}>Area Privata</Nav.Link>
+                                <Nav.Link onClick={() => navigate('/game')}>Gioca</Nav.Link>
+                                <Nav.Link onClick={() => navigate('/ranking')}>Classifica</Nav.Link>
                             </>
                         )}
                     </Nav>
                     <Nav>
                         {props.loggedIn ? (
-                            <Button variant="outline-light" onClick={props.onLogout}>Logout</Button>
+                            <Button variant="outline-light" onClick={props.handleLogout}>Logout</Button>
                         ) : (
                             <Button variant="outline-light" onClick={() => navigate('/login')}>Login</Button>
                         )}
