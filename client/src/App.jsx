@@ -22,7 +22,7 @@ function App() {
         const checkAuth = async () => {
             setLoading(true);
             try {
-                const userData = await API.getCurrentUser();
+                const userData = await API.getUserInfo();
                 if (userData) {
                     setLoggedIn(true);
                     setUser(userData);
@@ -84,13 +84,17 @@ function App() {
                     user={user}
                 />
             }>
-                {/* Rotte basate sul tuo README.md */}
-                {/* <Route path="/" element={<HomePage loggedIn={loggedIn} user={user}/>} /> */}
-                {/* <Route path="/login" element={<LoginPage handleLogin={handleLogin} loggedIn={loggedIn}/>}/> */}
-                {/* <Route path="/something/:param" element={<ListOfSomething setMessage={setMessage}/>}/> */}
-                
+                {/* Rotte Ripristinate e Corrette */}
+               <Route path="/" element={<HomePage loggedIn={loggedIn} user={user}/>} />
+               <Route path="/login" element={<LoginPage handleLogin={handleLogin} loggedIn={loggedIn}/>} />
+            
+                {/* Rotta aggiunta per il Gioco (passando setMessage come prop) */}
+               <Route path="/game" element={<GamePage setMessage={setMessage} />} />
+               <Route path="/ranking" element={<RankingPage />} />
+            
                 {/* Rotta di fallback */}
                 <Route path="*" element={<h2>Pagina non trovata</h2>} />
+                
             </Route>
         </Routes>
           )

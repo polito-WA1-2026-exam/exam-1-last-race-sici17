@@ -57,6 +57,12 @@ const GamePage = (props) => {
             props.setMessage(null);
             const data = await API.startNewGame(); // Fornisce gameId, startStation, destStation, deadline
 
+            if (result.validRoute === false) {
+            setGamePhase('defeat')
+        } else {
+            setGamePhase('execution');
+        }
+
             setGameData(data);
             setRoute([]);
             setGameDeadline(data.deadline);
