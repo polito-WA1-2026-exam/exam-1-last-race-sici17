@@ -5,7 +5,16 @@ import "../../styles/GamePlay.css";
 
 const GamePlay = (props) => {
     const { gameData, network, route, timeLeft, handleSegmentSelect, handleConfirmRoute, gameStats } = props;
-    const allSegments = network.segments || [];
+    const allSegments = (network.connections || []).map(conn => {
+        const stationA = allStations.find(s => s.id === conn.station_a_id);
+        const stationB = allStations.find(s => s.id === conn.station_b_id);
+        
+        return {
+            ...conn, // manteniamo id, line_id, station_a_id, ecc.
+            from: stationA ? stationA.name : "Sconosciuta",
+            to: stationB ? stationB.name : "Sconosciuta"
+        };
+    });
     const allStations = network.stations || [];
 
     return (
@@ -29,10 +38,10 @@ const GamePlay = (props) => {
                     <Card.Body className="p-4 bg-white">
                         <div className="text-center p-3 border rounded bg-light mb-4 shadow-sm">
                             <h6 className="text-muted mb-1">PARTENZA</h6>
-                            <h4 className="text-success fw-bold mb-2">{gameData.startStation}</h4>
+                            <h4 className="text-success fw-bold mb-2">{gameData.startStation.name}</h4>
                             <div className="text-muted mb-2" style={{ fontSize: '1.3rem' }}>➔</div>
                             <h6 className="text-muted mb-1">DESTINAZIONE</h6>
-                            <h4 className="text-danger fw-bold mb-0">{gameData.destStation}</h4>
+                            <h4 className="text-danger fw-bold mb-0">{gameData.destStation.name}</h4>
                         </div>
 
                         <h5 className="mb-3 text-secondary">🛤️ Percorso Pianificato:</h5>

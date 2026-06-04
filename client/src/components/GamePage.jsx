@@ -57,12 +57,6 @@ const GamePage = (props) => {
             props.setMessage(null);
             const data = await API.startNewGame(); // Fornisce gameId, startStation, destStation, deadline
 
-            if (result.validRoute === false) {
-            setGamePhase('defeat')
-        } else {
-            setGamePhase('execution');
-        }
-
             setGameData(data);
             setRoute([]);
             setGameDeadline(data.deadline);
@@ -87,21 +81,22 @@ const GamePage = (props) => {
     const handleConfirmRoute = async () => {
         try {
             props.setMessage(null);
-            // Invia il vettore completo dei segmenti scelti dall'utente
-            const result = await API.submitRoute(gameData.gameId, route);
+            const routePayload = route.map(segment => segment.id);
+            const result = await API.submitRoute(routePayload);
             setExecutionResult(result); // Ritorna { won: true/false, finalScore: X, events: [...] }
             setGamePhase('execution');
         } catch (error) {
             if (import.meta.env.DEV) 
                 console.error('Error submitting route:', error);
-            props.setMessage(`Errore: impossibile confermare il percorso`);
+            props.setMessage({msg: 'Errore: impossibile caricare la mappa della rete metropolitana', type: 'danger' });
         }
     };
 
     const handleTimeUp = async () => {
         try {
             // Sottomette la rotta corrente allo scadere del tempo
-            const result = await API.submitRoute(gameData.gameId, route);
+            const routePayload = route.map(segment => segment.id);
+            const result = await API.submitRoute(routePayload);
             setExecutionResult(result);
             setGamePhase('execution');
         } catch (error) {
@@ -131,6 +126,14 @@ const GamePage = (props) => {
     };
 
     const goHome = () => navigate('/');
+
+    if (!network) {
+    return (
+        <div className="d-flex justify-content-center align-items-center vh-100">
+            <div>Caricamento della rete metropolitana in corso...</div>
+        </div>
+    );
+}
 
     return (
         <>

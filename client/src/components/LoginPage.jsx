@@ -28,7 +28,7 @@ const LoginPage = ({ handleLogin, loggedIn }) => {
             setIsLoading(true);
             setError('');
 
-            const success = await handleLogin({ username:email, password });
+            const success = await handleLogin({ email, password });
 
             if (success) {
                 navigate('/');

@@ -76,21 +76,14 @@ const startNewGame = async () => {
 };
 
 // Invia il percorso completato dal giocatore per validazione ed esecuzione
-const submitRoute = async (gameId, route) => {
-    const response = await fetch(`${API_URL}/games/${gameId}/submit`, {
+const submitRoute = async (route) => {
+    const response = await fetch(`${API_URL}/games/execute`, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ route }) // Invia l'array dei segmenti
+        body: JSON.stringify({ route }) 
     });
-
-    if (!response.ok) {
-        const errorData = await response.text();
-        throw new Error(errorData || 'Failed to submit route');
-    }
-
+    if (!response.ok) throw new Error('Failed to submit route');
     return await response.json();
 };
 
@@ -98,16 +91,11 @@ const submitRoute = async (gameId, route) => {
 
 // Sostituisce la vecchia getUserHistory, recupera i migliori punteggi
 const getRanking = async () => {
-    const response = await fetch(`${API_URL}/ranking`, {
+    const response = await fetch(`${API_URL}/games/ranking`, {
         method: 'GET',
         credentials: 'include'
     });
-
-    if (!response.ok) {
-        const errorData = await response.text();
-        throw new Error(errorData || 'Failed to get global ranking');
-    }
-
+    if (!response.ok) throw new Error('Failed to get global ranking');
     return await response.json();
 };
 
