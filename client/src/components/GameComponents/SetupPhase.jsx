@@ -26,7 +26,7 @@ const SetupPhase = ({ network, onStartGame }) => {
         <Container className="my-4">
             <Card className="shadow text-center p-4 bg-light">
                 <Card.Body>
-                    <h1 className="display-5 mb-3">🚇 Fase di Setup</h1>
+                    <h1 className="display-5 mb-3">    🚇</h1>
                     <p className="lead mb-4">
                         Studia attentamente la rete metropolitana qui sotto. Memorizza le linee e le connessioni tra le stazioni. Quando cliccherai su "Inizia la Gara", le linee svaniranno e avrai solo 90 secondi per pianificare il tuo percorso!
                     </p>

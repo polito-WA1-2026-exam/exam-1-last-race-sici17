@@ -57,7 +57,6 @@ const LoginPage = ({ handleLogin, loggedIn }) => {
                             {/* Header */}
                             <div className="login-header">
                                 <div className="login-emoji">🔐</div>
-                                <h2 className="login-title">Accedi</h2>
                                 <p className="login-subtitle">
                                     Inizia il tuo giro!
                                 </p>
@@ -140,7 +139,7 @@ const LoginPage = ({ handleLogin, loggedIn }) => {
                             <div className="test-info">
                                 <small className="text-muted">
                                     <strong>Account di test:</strong><br/>
-                                    Email: pasq@gmail.com<br/>
+                                    Email: test@polito.it<br/>
                                     Password: password
                                 </small>
                             </div>

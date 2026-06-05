@@ -33,7 +33,7 @@ export const VictoryGameResult = ({ score, resetGame, goHome }) => {
     );
 };
 
-export const DefeatGameResult = ({ score, resetGame, goHome }) => {
+export const DefeatGameResult = ({ score = 0, resetGame, goHome }) => {
     // Anche in caso di sconfitta o rotta invalida mostriamo 0 (le specifiche dicono che il giocatore perde le 20 monete o se va sotto zero mostra 0)
     const displayScore = score < 0 ? 0 : score;
 
@@ -43,6 +43,12 @@ export const DefeatGameResult = ({ score, resetGame, goHome }) => {
                 <Card.Body>
                     <h1 className="text-danger mb-3">💀 Sconfitta 💀</h1>
                     <h5 className="text-muted mb-4">Il tuo viaggio è fallito o la rotta era invalida!</h5>
+
+                    <h5 className="text-muted mb-4">
+                        {isTimeout 
+                            ? "Tempo scaduto! Non hai confermato la rotta in tempo." 
+                            : "Il tuo viaggio è fallito o la rotta era invalida!"}
+                    </h5>
                     
                     <div className="bg-light p-4 rounded mb-4 shadow-sm">
                         <h2 className="display-2 fw-bold text-danger m-0">{displayScore}</h2>

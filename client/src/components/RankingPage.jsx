@@ -51,7 +51,7 @@ const RankingPage = () => {
                     </div>
                     
                     <p className="text-muted mb-4">
-                        In questa pagina viene mostrato il **miglior punteggio assoluto** ottenuto da ciascun macchinista della community di <em>Last Race</em>.
+                        In questa pagina viene mostrato il miglior punteggio assoluti  ottenuto da ciascun macchinista della community di <em>Last Race</em>.
                     </p>
 
                     {error && <Alert variant="danger">{error}</Alert>}

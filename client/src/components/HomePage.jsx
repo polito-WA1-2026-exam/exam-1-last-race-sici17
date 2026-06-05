@@ -66,7 +66,6 @@ const HomePage = ({ loggedIn, user }) => {
                         <Card className="shadow p-5 border-0 bg-white">
                             <Card.Body>
                                 <div className="mb-4" style={{ fontSize: '4rem' }}>🕹️</div>
-                                <h1 className="display-6 mb-3 fw-bold">Bentornato, {user?.username || 'Giocatore'}!</h1>
                                 <p className="lead text-muted mb-5">
                                     Le linee della metropolitana ti aspettano. Riuscirai a battere il tuo record personale?
                                 </p>

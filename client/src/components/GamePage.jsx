@@ -8,6 +8,9 @@ import API from "../API/API.mjs";
 import "../styles/GamePage.css";
 
 const GamePage = (props) => {
+
+    
+        
     const navigate = useNavigate();
     const [gamePhase, setGamePhase] = useState('setup'); // setup, planning, execution, victory, defeat
     const [network, setNetwork] = useState(null);
@@ -130,13 +133,17 @@ const GamePage = (props) => {
     };
 
     const handleTimeUp = async () => {
+        // 1. Fermiamo subito il timer per evitare loop infiniti e crash
+        setGameDeadline(null); 
+        
         try {
             const routePayload = calculateStationRoute();
             const result = await API.submitRoute(routePayload);
             
             const formattedResult = {
                 won: !!result.valid,
-                finalScore: result.finalScore,
+                finalScore: result.finalScore || 0,
+                isTimeout: true, // Passiamo il flag
                 events: (result.executionSteps || []).map(step => {
                     const stationObj = network.stations.find(s => s.id === step.stationId);
                     return {
@@ -150,9 +157,15 @@ const GamePage = (props) => {
             setExecutionResult(formattedResult);
             setGamePhase('execution');
         } catch (error) {
-            if (import.meta.env.DEV) 
-                console.error('Error handling timeout:', error);
-            props.setMessage(`Errore: tempo scaduto, invio di emergenza fallito`);
+            // 2. Se il server restituisce errore (es. rotta incompleta),
+            // andiamo diretti alla pagina di sconfitta per timeout senza crashare
+            setExecutionResult({
+                won: false,
+                finalScore: 0, // Nessun punteggio in caso di mancato invio
+                isTimeout: true, // Segnaliamo che è per colpa del timeout
+                events: []
+            });
+            setGamePhase('defeat');
         }
     };
 
@@ -211,7 +224,7 @@ const GamePage = (props) => {
                 <VictoryGameResult score={executionResult.finalScore} resetGame={resetGame} goHome={goHome} />
             )}
             {gamePhase === 'defeat' && executionResult && (
-                <DefeatGameResult score={executionResult.finalScore} resetGame={resetGame} goHome={goHome} />
+                <DefeatGameResult score={executionResult.finalScore} isTimeout={executionResult.isTimeout} resetGame={resetGame} goHome={goHome} />
             )}
         </>
     );
