@@ -78,26 +78,76 @@ const GamePage = (props) => {
         }
     };
 
+    // Calcola la sequenza ordinata degli ID delle stazioni seguendo i passaggi
+    const calculateStationRoute = () => {
+        if (!gameData || !gameData.startStation) return [];
+        let currentStationId = gameData.startStation.id;
+        const finalRouteStations = [];
+
+        for (const segment of route) {
+            if (segment.station_a_id === currentStationId) {
+                finalRouteStations.push(segment.station_b_id);
+                currentStationId = segment.station_b_id;
+            } else if (segment.station_b_id === currentStationId) {
+                finalRouteStations.push(segment.station_a_id);
+                currentStationId = segment.station_a_id;
+            } else {
+                // Fallback di sicurezza se la rotta ha discontinuità
+                finalRouteStations.push(segment.station_b_id);
+                currentStationId = segment.station_b_id;
+            }
+        }
+        return finalRouteStations;
+    };
+
     const handleConfirmRoute = async () => {
         try {
             props.setMessage(null);
-            const routePayload = route.map(segment => segment.id);
+            const routePayload = calculateStationRoute();
             const result = await API.submitRoute(routePayload);
-            setExecutionResult(result); // Ritorna { won: true/false, finalScore: X, events: [...] }
+            
+            // Adattamento e mapping dei dati da Backend a Frontend
+            const formattedResult = {
+                won: !!result.valid,
+                finalScore: result.finalScore,
+                events: (result.executionSteps || []).map(step => {
+                    const stationObj = network.stations.find(s => s.id === step.stationId);
+                    return {
+                        station: stationObj ? stationObj.name : `Stazione ${step.stationId}`,
+                        description: step.event ? step.event.description : "Nessun imprevisto",
+                        coinChange: step.event ? step.event.coinModifier : 0
+                    };
+                })
+            };
+
+            setExecutionResult(formattedResult); 
             setGamePhase('execution');
         } catch (error) {
             if (import.meta.env.DEV) 
                 console.error('Error submitting route:', error);
-            props.setMessage({msg: 'Errore: impossibile caricare la mappa della rete metropolitana', type: 'danger' });
+            props.setMessage({ msg: 'Errore durante la verifica della rotta', type: 'danger' });
         }
     };
 
     const handleTimeUp = async () => {
         try {
-            // Sottomette la rotta corrente allo scadere del tempo
-            const routePayload = route.map(segment => segment.id);
+            const routePayload = calculateStationRoute();
             const result = await API.submitRoute(routePayload);
-            setExecutionResult(result);
+            
+            const formattedResult = {
+                won: !!result.valid,
+                finalScore: result.finalScore,
+                events: (result.executionSteps || []).map(step => {
+                    const stationObj = network.stations.find(s => s.id === step.stationId);
+                    return {
+                        station: stationObj ? stationObj.name : `Stazione ${step.stationId}`,
+                        description: step.event ? step.event.description : "Nessun imprevisto",
+                        coinChange: step.event ? step.event.coinModifier : 0
+                    };
+                })
+            };
+
+            setExecutionResult(formattedResult);
             setGamePhase('execution');
         } catch (error) {
             if (import.meta.env.DEV) 
@@ -107,7 +157,7 @@ const GamePage = (props) => {
     };
 
     const handleExecutionComplete = () => {
-        if (executionResult.won) {
+        if (executionResult && executionResult.won) {
             setGamePhase('victory');
         } else {
             setGamePhase('defeat');
@@ -128,12 +178,12 @@ const GamePage = (props) => {
     const goHome = () => navigate('/');
 
     if (!network) {
-    return (
-        <div className="d-flex justify-content-center align-items-center vh-100">
-            <div>Caricamento della rete metropolitana in corso...</div>
-        </div>
-    );
-}
+        return (
+            <div className="d-flex justify-content-center align-items-center vh-100">
+                <div>Caricamento della rete metropolitana in corso...</div>
+            </div>
+        );
+    }
 
     return (
         <>

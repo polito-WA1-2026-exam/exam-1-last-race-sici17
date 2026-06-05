@@ -5,6 +5,9 @@ import "../../styles/GamePlay.css";
 
 const GamePlay = (props) => {
     const { gameData, network, route, timeLeft, handleSegmentSelect, handleConfirmRoute, gameStats } = props;
+    
+    const allStations = network.stations || [];
+    
     const allSegments = (network.connections || []).map(conn => {
         const stationA = allStations.find(s => s.id === conn.station_a_id);
         const stationB = allStations.find(s => s.id === conn.station_b_id);
@@ -15,7 +18,6 @@ const GamePlay = (props) => {
             to: stationB ? stationB.name : "Sconosciuta"
         };
     });
-    const allStations = network.stations || [];
 
     return (
         <Row className="min-vh-100 align-items-center justify-content-center py-4">
@@ -41,7 +43,7 @@ const GamePlay = (props) => {
                             <h4 className="text-success fw-bold mb-2">{gameData.startStation.name}</h4>
                             <div className="text-muted mb-2" style={{ fontSize: '1.3rem' }}>➔</div>
                             <h6 className="text-muted mb-1">DESTINAZIONE</h6>
-                            <h4 className="text-danger fw-bold mb-0">{gameData.destStation.name}</h4>
+                            <h4 className="text-danger fw-bold mb-0">{gameData.destinationStation.name}</h4>
                         </div>
 
                         <h5 className="mb-3 text-secondary">🛤️ Percorso Pianificato:</h5>

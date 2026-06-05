@@ -15,8 +15,8 @@ const RankingPage = () => {
                 setLoading(true);
                 const data = await API.getRanking();
                 
-                // Ordina i punteggi dal più alto al più basso per sicurezza
-                const sortedData = data.sort((a, b) => b.score - a.score);
+                // FIX: Usa "highscore" invece di "score"
+                const sortedData = data.sort((a, b) => b.highscore - a.highscore);
                 setRanking(sortedData);
                 setError(null);
             } catch (err) {
@@ -78,10 +78,12 @@ const RankingPage = () => {
                                     return (
                                         <tr key={index} className={index === 0 ? "table-success fw-bold" : ""}>
                                             <td className="fs-5">{positionBadge}</td>
-                                            <td className="fw-semibold">{row.username}</td>
+                                            {/* FIX: Usa "row.name" invece di "row.username" */}
+                                            <td className="fw-semibold">{row.name}</td>
                                             <td>
                                                 <span className="badge bg-dark fs-6 px-3 py-2 shadow-sm">
-                                                    {row.score} 🪙
+                                                    {/* FIX: Usa "row.highscore" invece di "row.score" */}
+                                                    {row.highscore} 🪙
                                                 </span>
                                             </td>
                                         </tr>

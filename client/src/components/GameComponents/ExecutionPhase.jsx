@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Badge, Button } from 'react-bootstrap';
 
-const ExecutionPhase = ({ events, onComplete }) => {
+const ExecutionPhase = ({ events=[], onComplete }) => {
     const [currentStep, setCurrentStep] = useState(0);
 
     useEffect(() => {
