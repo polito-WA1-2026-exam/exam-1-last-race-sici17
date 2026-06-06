@@ -5,12 +5,9 @@ import GamePlay from "./GameComponents/GamePlay.jsx";
 import ExecutionPhase from "./GameComponents/ExecutionPhase.jsx";
 import { VictoryGameResult, DefeatGameResult } from "./GameComponents/GameResult.jsx";
 import API from "../API/API.mjs";
-import "../styles/GamePage.css";
 
 const GamePage = (props) => {
 
-    
-        
     const navigate = useNavigate();
     const [gamePhase, setGamePhase] = useState('setup'); 
     const [network, setNetwork] = useState(null);
@@ -20,7 +17,7 @@ const GamePage = (props) => {
     const [gameDeadline, setGameDeadline] = useState(null); 
     const [executionResult, setExecutionResult] = useState(null);
 
-    // caricamento  della rete metropolitana 
+    // caricamento della rete metropolitana 
     useEffect(() => {
         const fetchNetwork = async () => {
             try {
@@ -91,7 +88,6 @@ const GamePage = (props) => {
                 finalRouteStations.push(segment.station_a_id);
                 currentStationId = segment.station_a_id;
             } else {
-                // Fallback di sicurezza se la rotta ha discontinuità
                 finalRouteStations.push(segment.station_b_id);
                 currentStationId = segment.station_b_id;
             }
@@ -122,7 +118,7 @@ const GamePage = (props) => {
             if (formattedResult.won) {
                 setGamePhase('execution');
             } else {
-              setGamePhase('defeat'); // salta direttamente alla schermata di sconfitta
+              setGamePhase('defeat'); 
             } 
             
         } catch (error) {
@@ -142,7 +138,7 @@ const GamePage = (props) => {
             const formattedResult = {
                 won: !!result.valid,
                 finalScore: result.finalScore || 0,
-                isTimeout: true, // passiamo il flag
+                isTimeout: true, 
                 events: (result.executionSteps || []).map(step => {
                     const stationObj = network.stations.find(s => s.id === step.stationId);
                     return {
@@ -157,13 +153,13 @@ const GamePage = (props) => {
             if (formattedResult.won) {
                 setGamePhase('execution');
             } else {
-              setGamePhase('defeat'); // salta direttamente alla schermata di sconfitta
+              setGamePhase('defeat'); 
             } 
         } catch (error) {
             setExecutionResult({
                 won: false,
-                finalScore: 0, // nessun punteggio in caso di mancato invio
-                isTimeout: true, // segnaliamo che è per colpa del timeout
+                finalScore: 0, 
+                isTimeout: true, 
                 events: []
             });
             setGamePhase('defeat');
@@ -199,7 +195,7 @@ const GamePage = (props) => {
     }
 
     return (
-        <>
+        <div className="main-game-page">
             {gamePhase === 'setup' && network && (
                 <SetupPhase network={network} onStartGame={startGame} />
             )}
@@ -226,7 +222,7 @@ const GamePage = (props) => {
             {gamePhase === 'defeat' && executionResult && (
                 <DefeatGameResult score={executionResult.finalScore} isTimeout={executionResult.isTimeout} resetGame={resetGame} goHome={goHome} />
             )}
-        </>
+        </div>
     );
 };
 

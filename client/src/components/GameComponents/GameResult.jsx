@@ -8,9 +8,9 @@ export const VictoryGameResult = ({ score, resetGame, goHome }) => {
 
     return (
         <Container className="d-flex justify-content-center align-items-center min-vh-100">
-            <Card className="text-center shadow-lg p-4 border-success" style={{ width: '30rem' }}>
-                <Card.Body>
-                    <h1 className="text-success mb-3">🎉 Vittoria! 🎉</h1>
+            <Card className="text-center result-card border-success p-4" style={{ width: '30rem' }}>
+                <Card.Body className="result-card-body">
+                    <h1 className="victory-title mb-3">Vittoria!</h1>
                     <h5 className="text-muted mb-4">Sei arrivato a destinazione!</h5>
                     
                     <div className="bg-light p-4 rounded mb-4 shadow-sm">
@@ -18,7 +18,7 @@ export const VictoryGameResult = ({ score, resetGame, goHome }) => {
                         <p className="text-muted m-0 mt-2">Monete Finali</p>
                     </div>
 
-                    <div className="d-grid gap-3">
+                    <div className="d-grid gap-3 footer-section">
                         <Button variant="success" size="lg" onClick={resetGame}>
                             🔄 Gioca Ancora
                         </Button>
@@ -38,9 +38,9 @@ export const DefeatGameResult = ({ score = 0, isTimeout, resetGame, goHome }) =>
 
     return (
         <Container className="d-flex justify-content-center align-items-center min-vh-100">
-            <Card className="text-center shadow-lg p-4 border-danger" style={{ width: '30rem' }}>
-                <Card.Body>
-                    <h1 className="text-danger mb-3">💀 Sconfitta 💀</h1>
+            <Card className="text-center result-card border-danger p-4" style={{ width: '30rem' }}>
+                <Card.Body className="result-card-body">
+                    <h1 className="defeat-title mb-3">Sconfitta</h1>
                     
                     <h5 className="text-muted mb-4">
                         {isTimeout 
@@ -53,7 +53,7 @@ export const DefeatGameResult = ({ score = 0, isTimeout, resetGame, goHome }) =>
                         <p className="text-muted m-0 mt-2">Monete Finali</p>
                     </div>
 
-                    <div className="d-grid gap-3">
+                    <div className="d-grid gap-3 footer-section">
                         <Button variant="danger" size="lg" onClick={resetGame}>
                             🔄 Riprova
                         </Button>
