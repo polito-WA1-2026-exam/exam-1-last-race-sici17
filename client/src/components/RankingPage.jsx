@@ -14,12 +14,10 @@ const RankingPage = () => {
             try {
                 setLoading(true);
                 const data = await API.getRanking();
-                
-                // FIX: Usa "highscore" invece di "score"
-                const sortedData = data.sort((a, b) => b.highscore - a.highscore);
-                setRanking(sortedData);
+                setRanking(data);
                 setError(null);
             } catch (err) {
+                console.error("ERRORE CLASSIFICA:", err);
                 setError('Impossibile caricare la classifica generale della metropolitana.');
             } finally {
                 setLoading(false);

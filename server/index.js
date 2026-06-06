@@ -162,6 +162,11 @@ app.post('/api/games/execute', isLoggedIn, async (req, res) => {
           stepInfo = validSteps.find(s => s.id === parseInt(nextStationId));
         }
 
+        if (!stepInfo) {
+          isValid = false; // La stazione non è adiacente, rotta invalida!
+          break;
+        }
+
         // Se stiamo già viaggiando su una linea e la linea del prossimo segmento è diversa...
         if (currentLine !== null && currentLine !== stepInfo.lineName) {
           // ...dobbiamo assicurarci che la stazione da cui stiamo partendo sia un interscambio!

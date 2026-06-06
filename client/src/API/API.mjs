@@ -49,7 +49,7 @@ const getUserInfo = async () => {
 const getNetwork = async () => {
     const response = await fetch(`${API_URL}/network`, {
         method: 'GET',
-        credentials: 'include' // Nel caso tu voglia limitarla ai loggati, ma tipicamente è publica
+        credentials: 'include' 
     });
 
     if (!response.ok) {

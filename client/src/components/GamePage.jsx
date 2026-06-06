@@ -62,7 +62,7 @@ const GamePage = (props) => {
             setGameData(data);
             setRoute([]);
             setGameDeadline(data.deadline);
-            setGameStats({ coins: 20, segmentsCount: 0 });
+            // setGameStats({ coins: 20, segmentsCount: 0 }); <--- RIGA ELIMINATA
             setGamePhase('planning');
         } catch (error) {
             if (import.meta.env.DEV) 
@@ -193,7 +193,7 @@ const GamePage = (props) => {
         setGameDeadline(null);
         setExecutionResult(null);
         props.setMessage(null);
-        setGameStats({ coins: 20, segmentsCount: 0 });
+        // setGameStats({ coins: 20, segmentsCount: 0 }); <--- RIGA ELIMINATA
     };
 
     const goHome = () => navigate('/');
