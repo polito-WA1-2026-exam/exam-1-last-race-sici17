@@ -170,42 +170,6 @@ const SaveMatch = (userId, startStationId, destinationStationId, finalScore) => 
     });
 };
 
-
-// Ottiene la cronologia delle partite di un utente
-const getUserMatchHistory = (userId) => {
-    return new Promise((resolve, reject) => {
-        const sql = `
-            SELECT 
-                m.id,
-                m.date,
-                m.final_score,
-                s1.name as start_station,
-                s2.name as dest_station
-            FROM matches m
-            JOIN stations s1 ON m.start_station_id = s1.id
-            JOIN stations s2 ON m.destination_station_id = s2.id
-            WHERE m.user_id = ?
-            ORDER BY m.date DESC
-        `;
-        db.all(sql, [userId], (err, rows) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(rows.map(r => ({
-                    id: r.id,
-                    date: r.date,
-                    finalScore: r.final_score,
-                    startStation: r.start_station,
-                    destinationStation: r.dest_station
-                })));
-            }
-        });
-    });
-};
-
-
-
-
 const getGlobalRanking = () => {
   return new Promise((resolve, reject) => {
     const query = `
@@ -244,6 +208,6 @@ const getNetworkMap = () => {
 
 ////////////////////////////
 
-const DAO = {getUser, getRandomStations, getRandomEvent, getAdjacentStations, SaveMatch, getUserMatchHistory, getGlobalRanking, getNetworkMap};
+const DAO = {getUser, getRandomStations, getRandomEvent, getAdjacentStations, SaveMatch, getGlobalRanking, getNetworkMap};
 
 export default DAO;

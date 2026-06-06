@@ -16,7 +16,6 @@ const port = 3001;
 app.use(express.json()); 
 app.use(morgan('dev'));
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-app.use(express.static(path.join(__dirname, 'public'))); // per servire eventuali file statici/immagini
 
 // sessions in express
 app.use(session({
@@ -182,7 +181,7 @@ app.post('/api/games/execute', isLoggedIn, async (req, res) => {
     }
   }
 
-    const userId = req.isAuthenticated() ? req.user.id : null;
+    const userId = req.user.id;
 
     // failed path
     if (!isValid) {
@@ -254,18 +253,6 @@ app.get('/api/network',isLoggedIn, async (req, res) => {
 });
 
 
-
-
-// history api
-app.get('/api/users/history', isLoggedIn, async (req, res) => {
-    try {
-        const history = await dao.getUserMatchHistory(req.user.id);
-        res.json(history);
-    } catch (error) {
-        console.error('Error fetching user history:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
 
 
 app.listen(port, () => {
