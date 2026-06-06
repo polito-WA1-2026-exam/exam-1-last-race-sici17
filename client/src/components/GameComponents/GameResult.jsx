@@ -1,10 +1,9 @@
 import React from 'react';
 import { Card, Button, Container } from 'react-bootstrap';
-// Importiamo il CSS (ho visto che hai un GameResult.css nei file del progetto)
 import '../../styles/GameResult.css'; 
 
 export const VictoryGameResult = ({ score, resetGame, goHome }) => {
-    // Specifica dell'esame: se il punteggio finale è negativo, viene mostrato come 0
+    // se il punteggio finale è negativo, viene mostrato come 0
     const displayScore = score < 0 ? 0 : score;
 
     return (
@@ -24,7 +23,7 @@ export const VictoryGameResult = ({ score, resetGame, goHome }) => {
                             🔄 Gioca Ancora
                         </Button>
                         <Button variant="outline-secondary" onClick={goHome}>
-                            🏠 Torna alla Home
+                             Torna alla Home
                         </Button>
                     </div>
                 </Card.Body>
@@ -33,9 +32,8 @@ export const VictoryGameResult = ({ score, resetGame, goHome }) => {
     );
 };
 
-// Aggiungi isTimeout tra le props qui sotto
 export const DefeatGameResult = ({ score = 0, isTimeout, resetGame, goHome }) => {
-    // Anche in caso di sconfitta o rotta invalida mostriamo 0 
+    // mostriamo sempre zero, per sconfitta o rotta invalida 
     const displayScore = score < 0 ? 0 : score;
 
     return (
@@ -44,7 +42,6 @@ export const DefeatGameResult = ({ score = 0, isTimeout, resetGame, goHome }) =>
                 <Card.Body>
                     <h1 className="text-danger mb-3">💀 Sconfitta 💀</h1>
                     
-                    {/* Rimuovi l'h5 duplicato e tieni solo quello condizionale */}
                     <h5 className="text-muted mb-4">
                         {isTimeout 
                             ? "Tempo scaduto! Non hai confermato la rotta in tempo." 
@@ -61,7 +58,7 @@ export const DefeatGameResult = ({ score = 0, isTimeout, resetGame, goHome }) =>
                             🔄 Riprova
                         </Button>
                         <Button variant="outline-secondary" onClick={goHome}>
-                            🏠 Torna alla Home
+                             Torna alla Home
                         </Button>
                     </div>
                 </Card.Body>

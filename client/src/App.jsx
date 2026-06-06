@@ -17,7 +17,7 @@ function App() {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    //check if user is already logged in on app start
+    // controllo log in
     useEffect(() => {
         const checkAuth = async () => {
             setLoading(true);
@@ -42,10 +42,10 @@ function App() {
             const userData = await API.login(credentials);
             setLoggedIn(true);
             setUser(userData);
-            setMessage({msg: "Login effettuato con successo.", type: 'success'});
+            setMessage({msg: "Succesfull login.", type: 'success'});
             return true;
         } catch (error) {
-            setMessage({ msg: "Credenziali non valide. Riprova.", type: 'danger' });
+            setMessage({ msg: "wrong credentials.", type: 'danger' });
             return false;
         }
     };
@@ -55,14 +55,14 @@ function App() {
             await API.logout();
             setLoggedIn(false);
             setUser(null);
-            setMessage({ msg: 'Logout effettuato con successo', type: 'info' });
+            setMessage({ msg: 'Succesfull logout', type: 'info' });
             navigate('/');
         } catch (error) {
-            setMessage({ msg: 'Errore durante il logout', type: 'danger' });
+            setMessage({ msg: 'logout error', type: 'danger' });
         }
     };
 
-    //show loading spinner while checking authentication
+    // caricamento
     if (loading) {
         return (
             <div className="d-flex justify-content-center align-items-center vh-100">
@@ -83,17 +83,14 @@ function App() {
                     setMessage={setMessage}
                     user={user}
                 />
-            }>
-                {/* Rotte Ripristinate e Corrette */}
+            }>  
                <Route path="/" element={<HomePage loggedIn={loggedIn} user={user}/>} />
                <Route path="/login" element={<LoginPage handleLogin={handleLogin} loggedIn={loggedIn}/>} />
             
-                {/* Rotta aggiunta per il Gioco (passando setMessage come prop) */}
                <Route path="/game" element={loggedIn ? <GamePage setMessage={setMessage} /> : <Navigate to="/login" />} />
                <Route path="/ranking" element={loggedIn ? <RankingPage /> : <Navigate to="/login" />} />
             
-                {/* Rotta di fallback */}
-                <Route path="*" element={<h2>Pagina non trovata</h2>} />
+               <Route path="*" element={<h2>Page not found</h2>} />
                 
             </Route>
         </Routes>

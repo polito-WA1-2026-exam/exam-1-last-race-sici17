@@ -75,7 +75,7 @@ const GamePlay = (props) => {
                                 disabled={route.length === 0}
                                 className="px-5 py-2 fs-5 shadow w-100"
                             >
-                                🚂 Avvia il Treno e Verifica
+                                 Avvia il Treno e Verifica
                             </Button>
                         </div>
                     </Card.Body>
@@ -85,7 +85,7 @@ const GamePlay = (props) => {
             <Col xs={12} lg={7}>
                 <Card className="shadow mb-4">
                     <Card.Header className="bg-info text-white py-2">
-                        <h5 className="text-center mb-0">📍 Mappa Stazioni (Senza Linee)</h5>
+                        <h5 className="text-center mb-0"> Mappa Stazioni (Senza Linee)</h5>
                     </Card.Header>
                     <Card.Body className="p-3 text-center">
                         <div className="d-flex flex-wrap justify-content-center gap-2">
@@ -99,7 +99,7 @@ const GamePlay = (props) => {
                 </Card>
                 <Card className="shadow mb-4">
                     <Card.Header className="bg-primary text-white py-3">
-                        <h5 className="text-center mb-0">🔀 Collegamenti Disponibili (Linee Svanite)</h5>
+                        <h5 className="text-center mb-0"> Collegamenti Disponibili (Linee Svanite)</h5>
                     </Card.Header>
                     <Card.Body className="p-3" style={{ maxHeight: '75vh', overflowY: 'auto' }}>
                         <p className="text-muted text-center mb-3">Seleziona i segmenti per comporre la tua rotta:</p>

@@ -44,7 +44,7 @@ const RankingPage = () => {
                     <div className="d-flex justify-content-between align-items-center mb-4">
                         <h1 className="text-primary mb-0">🏆 Classifica Generale</h1>
                         <Button variant="outline-secondary" onClick={() => navigate('/')}>
-                            🏠 Torna alla Home
+                             Torna alla Home
                         </Button>
                     </div>
                     
@@ -67,7 +67,7 @@ const RankingPage = () => {
                             </thead>
                             <tbody>
                                 {ranking.map((row, index) => {
-                                    // Stile grafico speciale per i primi tre posti sul podio
+                                    // medaglia i primi tre posti 
                                     let positionBadge = `${index + 1}°`;
                                     if (index === 0) positionBadge = '🥇 1°';
                                     if (index === 1) positionBadge = '🥈 2°';
@@ -76,11 +76,9 @@ const RankingPage = () => {
                                     return (
                                         <tr key={index} className={index === 0 ? "table-success fw-bold" : ""}>
                                             <td className="fs-5">{positionBadge}</td>
-                                            {/* FIX: Usa "row.name" invece di "row.username" */}
                                             <td className="fw-semibold">{row.name}</td>
                                             <td>
                                                 <span className="badge bg-dark fs-6 px-3 py-2 shadow-sm">
-                                                    {/* FIX: Usa "row.highscore" invece di "row.score" */}
                                                     {row.highscore} 🪙
                                                 </span>
                                             </td>

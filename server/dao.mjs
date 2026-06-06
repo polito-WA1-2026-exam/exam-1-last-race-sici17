@@ -67,13 +67,13 @@ const getRandomStations = async () => {
 
         const shuffledStations = stations.sort(() => 0.5 - Math.random());
 
-        // Breadth-First Search
+        // breadth-First Search
         for (const startStation of shuffledStations) {
             const distances = {};
             const queue = [startStation.id];
             distances[startStation.id] = 0;
 
-            // Calcoliamo la distanza minima dalla stazione di partenza a tutte le altre
+            // calcoliamo la distanza minima dalla stazione di partenza a tutte le altre
             while (queue.length > 0) {
                 const current = queue.shift();
                 for (const neighbor of graph[current]) {
@@ -84,10 +84,10 @@ const getRandomStations = async () => {
                 }
             }
 
-            // Filtriamo solo le destinazioni raggiungibili che distano ALMENO 3 fermate
+            // filtriamo solo le destinazioni raggiungibili che distano almeno 3 fermate tra di loro
             const validDestinations = stations.filter(s => distances[s.id] >= 3);
 
-            // Se troviamo destinazioni valide, ne scegliamo una a caso e restituiamo la coppia
+            // se troviamo destinazioni valide, ne scegliamo una a caso e restituiamo la coppia
             if (validDestinations.length > 0) {
                 const destStation = validDestinations[Math.floor(Math.random() * validDestinations.length)];
                 return {

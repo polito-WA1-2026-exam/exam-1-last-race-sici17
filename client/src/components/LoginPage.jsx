@@ -10,7 +10,7 @@ const LoginPage = ({ handleLogin, loggedIn }) => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    //redirect if already logged in
+    // già loggato
     useEffect(() => {
         if (loggedIn) {
             navigate('/');
@@ -38,9 +38,7 @@ const LoginPage = ({ handleLogin, loggedIn }) => {
         }
     };
 
-    const handleDemoClick = () => {
-        navigate('/demo');
-    };
+
 
     const handleBackHome = () => {
         navigate('/');
@@ -54,7 +52,6 @@ const LoginPage = ({ handleLogin, loggedIn }) => {
                 <Row className="min-vh-100 justify-content-center align-items-center">
                     <Col >
                         <div className="login-card">
-                            {/* Header */}
                             <div className="login-header">
                                 <div className="login-emoji">🔐</div>
                                 <p className="login-subtitle">
@@ -62,14 +59,12 @@ const LoginPage = ({ handleLogin, loggedIn }) => {
                                 </p>
                             </div>
 
-                            {/* Error Alert */}
                             {error && (
                                 <Alert variant="danger" className="mb-3">
                                     <strong>Errore:</strong> {error}
                                 </Alert>
                             )}
 
-                            {/* Login Form */}
                             <Form noValidate validated={validated} onSubmit={handleSubmit}>
                                 <Form.Group className="mb-3">
                                     <Form.Label>Email</Form.Label>
@@ -116,7 +111,7 @@ const LoginPage = ({ handleLogin, loggedIn }) => {
                                         </>
                                     ) : (
                                         <>
-                                            <span className="btn-icon">🚀</span>
+                                            <span className="btn-icon"></span>
                                             Accedi
                                         </>
                                     )}
@@ -124,7 +119,6 @@ const LoginPage = ({ handleLogin, loggedIn }) => {
                             </Form>
 
 
-                            {/* Back to Home */}
                             <div className="back-section">
                                 <Button
                                     variant="link"
@@ -135,7 +129,6 @@ const LoginPage = ({ handleLogin, loggedIn }) => {
                                 </Button>
                             </div>
 
-                            {/* Test Credentials Info */}
                             <div className="test-info">
                                 <small className="text-muted">
                                     <strong>Account di test:</strong><br/>

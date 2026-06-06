@@ -1,7 +1,7 @@
 // API Functions
 const API_URL = 'http://localhost:3001/api';
 
-// --- User management APIs ---
+// user management apis
 const login = async (credentials) => {
     const response = await fetch(`${API_URL}/sessions`, {
         method: 'POST',
@@ -43,9 +43,8 @@ const getUserInfo = async () => {
     return null;
 };
 
-// --- Game management APIs ---
+// game management api
 
-// Recupera la mappa completa della rete metropolitana (Fase di Setup)
 const getNetwork = async () => {
     const response = await fetch(`${API_URL}/network`, {
         method: 'GET',
@@ -60,7 +59,7 @@ const getNetwork = async () => {
     return await response.json();
 };
 
-// Inizia una nuova partita assegnando stazione di partenza e di destinazione
+// inizia una nuova partita 
 const startNewGame = async () => {
     const response = await fetch(`${API_URL}/games/start`, {
         method: 'POST',
@@ -75,7 +74,7 @@ const startNewGame = async () => {
     return await response.json();
 };
 
-// Invia il percorso completato dal giocatore per validazione ed esecuzione
+// invia il percorso completato 
 const submitRoute = async (route) => {
     const response = await fetch(`${API_URL}/games/execute`, {
         method: 'POST',
@@ -87,9 +86,8 @@ const submitRoute = async (route) => {
     return await response.json();
 };
 
-// --- Global Ranking API ---
+// global ranking
 
-// Sostituisce la vecchia getUserHistory, recupera i migliori punteggi
 const getRanking = async () => {
     const response = await fetch(`${API_URL}/games/ranking`, {
         method: 'GET',
@@ -103,7 +101,7 @@ const API = {
     // user management
     login,
     logout,
-    getUserInfo, // Usato in App.jsx per l'auth persistente
+    getUserInfo, // usato in App.jsx per l'auth persistente
 
     // game management
     getNetwork,

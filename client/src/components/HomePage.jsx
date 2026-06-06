@@ -6,9 +6,6 @@ const HomePage = ({ loggedIn, user }) => {
     return (
         <Container className="my-4">
             {!loggedIn ? (
-                /* =====================================================================
-                   VISTA UTENTE ANONIMO: Solo istruzioni, niente mappa, niente funzionalità di gioco
-                   ===================================================================== */
                 <Row className="justify-content-center">
                     <Col xs={12} md={10}>
                         <Card className="shadow-sm border-0 bg-light p-4">
@@ -18,7 +15,7 @@ const HomePage = ({ loggedIn, user }) => {
                                     Un avvincente gioco di pianificazione metropolitana a giocatore singolo ispirato a "Race the Rails".
                                 </p>
                                 
-                                <h3 className="text-secondary mb-3">📋 Istruzioni del Gioco</h3>
+                                <h3 className="text-secondary mb-3">Istruzioni del Gioco</h3>
                                 <div className="bg-white p-4 rounded shadow-sm mb-4">
                                     <h5 className="text-dark fw-bold">Obiettivo del Gioco</h5>
                                     <p className="text-muted">
@@ -49,7 +46,7 @@ const HomePage = ({ loggedIn, user }) => {
                                     <p className="text-muted small mb-3">I visitatori anonimi possono solo leggere le istruzioni. Accedi con il tuo account per giocare.</p>
                                     <Link to="/login">
                                         <Button variant="primary" size="lg" className="px-5 shadow">
-                                            🔑 Accedi per Giocare
+                                             Accedi per Giocare
                                         </Button>
                                     </Link>
                                 </div>
@@ -58,14 +55,13 @@ const HomePage = ({ loggedIn, user }) => {
                     </Col>
                 </Row>
             ) : (
-                /* =====================================================================
-                   VISTA UTENTE REGISTRATO: Dashboard con accesso completo alle funzionalità
-                   ===================================================================== */
+             
+
                 <Row className="justify-content-center text-center">
                     <Col xs={12} md={8} lg={6}>
                         <Card className="shadow p-5 border-0 bg-white">
                             <Card.Body>
-                                <div className="mb-4" style={{ fontSize: '4rem' }}>🕹️</div>
+                                <div className="mb-4" style={{ fontSize: '4rem' }}></div>
                                 <p className="lead text-muted mb-5">
                                     Le linee della metropolitana ti aspettano. Riuscirai a battere il tuo record personale?
                                 </p>
@@ -73,12 +69,12 @@ const HomePage = ({ loggedIn, user }) => {
                                 <div className="d-grid gap-4 mx-auto">
                                     <Link to="/game">
                                         <Button variant="success" size="lg" className="w-100 py-3 fs-5 fw-bold shadow-sm">
-                                            🎮 Nuova Partita (Inizia la Gara)
+                                             Nuova Partita (Inizia la Gara)
                                         </Button>
                                     </Link>
                                     <Link to="/ranking">
                                         <Button variant="outline-primary" size="lg" className="w-100 py-3 fs-5 fw-bold shadow-sm">
-                                            🏆 Classifica Generale
+                                             Classifica Generale
                                         </Button>
                                     </Link>
                                 </div>

@@ -9,9 +9,9 @@ function NotFound() {
             <Row className="justify-content-center">
                 <Col>
                     <h1 className="display-3">404</h1>
-                    <p className="lead">Oops! La pagina che cerchi non esiste.</p>
+                    <p className="lead">Hey! La pagina che cerchi non esiste!.</p>
                     <Button variant="primary" onClick={() => navigate('/')}>
-                        Torna alla Home
+                        Torna alla Home ._.
                     </Button>
                 </Col>
             </Row>

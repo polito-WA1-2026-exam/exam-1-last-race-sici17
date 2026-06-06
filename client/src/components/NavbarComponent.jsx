@@ -9,7 +9,7 @@ const NavbarComponent = (props) => {
         <Navbar bg="primary" variant="dark" expand="lg" fixed="top" className="shadow">
             <Container>
                 <Navbar.Brand onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
-                    🚂 My Train Exam Project
+                    🚂 My metro exam project
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="main-navbar" />
                 <Navbar.Collapse id="main-navbar">

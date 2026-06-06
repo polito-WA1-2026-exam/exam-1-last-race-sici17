@@ -150,12 +150,12 @@ app.post('/api/games/execute', isLoggedIn, async (req, res) => {
     } else {
       // controllo adiacenze e cambi linea
       let currentLine = null;
-      let isCurrentStationInterchange = 1; // Default a 1 per la partenza (il primo spostamento è sempre valido)
+      let isCurrentStationInterchange = 1; 
 
       for (const nextStationId of route) {
         const validSteps = await dao.getAdjacentStations(currentStationId);
         
-        // Troviamo i dettagli specifici del segmento che l'utente vuole percorrere
+        
         let stepInfo = validSteps.find(s => s.id === parseInt(nextStationId) && (currentLine === null || s.lineName === currentLine));
 
         if (!stepInfo) {
@@ -163,22 +163,21 @@ app.post('/api/games/execute', isLoggedIn, async (req, res) => {
         }
 
         if (!stepInfo) {
-          isValid = false; // La stazione non è adiacente, rotta invalida!
+          isValid = false; // la stazione non è adiacente
           break;
         }
 
-        // Se stiamo già viaggiando su una linea e la linea del prossimo segmento è diversa...
+       
         if (currentLine !== null && currentLine !== stepInfo.lineName) {
-          // ...dobbiamo assicurarci che la stazione da cui stiamo partendo sia un interscambio!
           if (isCurrentStationInterchange === 0) {
-            isValid = false; // Cambio di linea illegale!
+            isValid = false;
             break;
           }
         }
 
-        // Aggiorniamo le variabili per il ciclo successivo
+        // aggiorniamo le variabili 
         currentLine = stepInfo.lineName; 
-        isCurrentStationInterchange = stepInfo.isInterchange; // Salviamo se la stazione in cui arriviamo ora è un interscambio
+        isCurrentStationInterchange = stepInfo.isInterchange;
         currentStationId = parseInt(nextStationId);
       }
     }

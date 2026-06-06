@@ -12,15 +12,15 @@ const GamePage = (props) => {
     
         
     const navigate = useNavigate();
-    const [gamePhase, setGamePhase] = useState('setup'); // setup, planning, execution, victory, defeat
+    const [gamePhase, setGamePhase] = useState('setup'); 
     const [network, setNetwork] = useState(null);
     const [gameData, setGameData] = useState(null); // id partita, startStation, destStation
-    const [route, setRoute] = useState([]); // Array dei tratti selezionati dall'utente
+    const [route, setRoute] = useState([]); // array dei tratti selezionati dall'utente
     const [timeLeft, setTimeLeft] = useState(90);
-    const [gameDeadline, setGameDeadline] = useState(null); // Ricevuta dal server
+    const [gameDeadline, setGameDeadline] = useState(null); 
     const [executionResult, setExecutionResult] = useState(null);
 
-    // Caricamento asincrono della rete metropolitana al mount
+    // caricamento  della rete metropolitana 
     useEffect(() => {
         const fetchNetwork = async () => {
             try {
@@ -28,14 +28,14 @@ const GamePage = (props) => {
                 setNetwork(data);
             } catch (error) {
                 if (import.meta.env.DEV) 
-                    console.error('Error fetching network:', error);
-                props.setMessage('Errore: impossibile caricare la mappa della rete metropolitana');
+                    console.error('fetch network:', error);
+                props.setMessage('Errore: loading the map is impossible');
             }
         };
         fetchNetwork();
     }, []);
 
-    // Timer ad alta precisione ereditato dallo stile di Gioco Sfortuna
+    // timer 
     useEffect(() => {
         if (gamePhase === 'planning' && gameDeadline) {
             const updateTimer = () => {
@@ -50,19 +50,18 @@ const GamePage = (props) => {
 
             updateTimer();
             const timer = setInterval(updateTimer, 1000);
-            return () => clearInterval(timer); // Cleanup anti-parallelismo
+            return () => clearInterval(timer); 
         }
     }, [gameDeadline, gamePhase]);
 
     const startGame = async () => {
         try {
             props.setMessage(null);
-            const data = await API.startNewGame(); // Fornisce gameId, startStation, destStation, deadline
+            const data = await API.startNewGame(); // fornisce gameId, startStation, destStation, deadline
 
             setGameData(data);
             setRoute([]);
             setGameDeadline(data.deadline);
-            // setGameStats({ coins: 20, segmentsCount: 0 }); <--- RIGA ELIMINATA
             setGamePhase('planning');
         } catch (error) {
             if (import.meta.env.DEV) 
@@ -72,7 +71,6 @@ const GamePage = (props) => {
     };
 
     const handleSegmentSelect = (segment) => {
-        // Se il segmento è già presente nella rotta lo rimuove (toggle), altrimenti lo aggiunge
         if (route.some(s => s.id === segment.id)) {
             setRoute(route.filter(s => s.id !== segment.id));
         } else {
@@ -80,7 +78,6 @@ const GamePage = (props) => {
         }
     };
 
-    // Calcola la sequenza ordinata degli ID delle stazioni seguendo i passaggi
     const calculateStationRoute = () => {
         if (!gameData || !gameData.startStation) return [];
         let currentStationId = gameData.startStation.id;
@@ -108,7 +105,6 @@ const GamePage = (props) => {
             const routePayload = calculateStationRoute();
             const result = await API.submitRoute(routePayload);
             
-            // Adattamento e mapping dei dati da Backend a Frontend
             const formattedResult = {
                 won: !!result.valid,
                 finalScore: result.finalScore,
@@ -126,18 +122,17 @@ const GamePage = (props) => {
             if (formattedResult.won) {
                 setGamePhase('execution');
             } else {
-              setGamePhase('defeat'); // Salta direttamente alla schermata di sconfitta
+              setGamePhase('defeat'); // salta direttamente alla schermata di sconfitta
             } 
             
         } catch (error) {
             if (import.meta.env.DEV) 
                 console.error('Error submitting route:', error);
-            props.setMessage({ msg: 'Errore durante la verifica della rotta', type: 'danger' });
+            props.setMessage({ msg: 'error during route verification', type: 'danger' });
         }
     };
 
     const handleTimeUp = async () => {
-        // 1. Fermiamo subito il timer per evitare loop infiniti e crash
         setGameDeadline(null); 
         
         try {
@@ -147,7 +142,7 @@ const GamePage = (props) => {
             const formattedResult = {
                 won: !!result.valid,
                 finalScore: result.finalScore || 0,
-                isTimeout: true, // Passiamo il flag
+                isTimeout: true, // passiamo il flag
                 events: (result.executionSteps || []).map(step => {
                     const stationObj = network.stations.find(s => s.id === step.stationId);
                     return {
@@ -162,15 +157,13 @@ const GamePage = (props) => {
             if (formattedResult.won) {
                 setGamePhase('execution');
             } else {
-              setGamePhase('defeat'); // Salta direttamente alla schermata di sconfitta
+              setGamePhase('defeat'); // salta direttamente alla schermata di sconfitta
             } 
         } catch (error) {
-            // 2. Se il server restituisce errore (es. rotta incompleta),
-            // andiamo diretti alla pagina di sconfitta per timeout senza crashare
             setExecutionResult({
                 won: false,
-                finalScore: 0, // Nessun punteggio in caso di mancato invio
-                isTimeout: true, // Segnaliamo che è per colpa del timeout
+                finalScore: 0, // nessun punteggio in caso di mancato invio
+                isTimeout: true, // segnaliamo che è per colpa del timeout
                 events: []
             });
             setGamePhase('defeat');
@@ -193,7 +186,6 @@ const GamePage = (props) => {
         setGameDeadline(null);
         setExecutionResult(null);
         props.setMessage(null);
-        // setGameStats({ coins: 20, segmentsCount: 0 }); <--- RIGA ELIMINATA
     };
 
     const goHome = () => navigate('/');
@@ -201,7 +193,7 @@ const GamePage = (props) => {
     if (!network) {
         return (
             <div className="d-flex justify-content-center align-items-center vh-100">
-                <div>Caricamento della rete metropolitana in corso...</div>
+                <div>Loading</div>
             </div>
         );
     }

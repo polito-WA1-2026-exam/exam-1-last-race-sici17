@@ -19,7 +19,7 @@ const ExecutionPhase = ({ events=[], onComplete }) => {
                 <Col xs={12} md={10} lg={8}>
                     <Card className="shadow-lg border-primary">
                         <Card.Header className="bg-primary text-white text-center py-3">
-                            <h3 className="mb-0">🚊 Treno in Movimento...</h3>
+                            <h3 className="mb-0"> Treno in Movimento...</h3>
                         </Card.Header>
                         <Card.Body className="p-4 bg-light">
                             <p className="text-muted text-center mb-4">Verifica degli imprevisti ad ogni fermata pianificata:</p>
@@ -63,7 +63,7 @@ const ExecutionPhase = ({ events=[], onComplete }) => {
                                         className="px-5 shadow"
                                         onClick={onComplete}
                                     >
-                                        🏁 Scopri il Risultato Finale
+                                         Scopri il Risultato Finale...
                                     </Button>
                                 </div>
                             )}
