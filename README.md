@@ -3,58 +3,60 @@
 
 ## React Client Application Routes
 
-- Route `/`: Home page displaying general information and the welcome message.
+- Route `/`: Home page displaying general information, instructions, and the welcome message.
 - Route `/login`: Login page containing the authentication form for users.
-- Route `/game`: Main gameplay page where authenticated users can start a match, select their path, and play the subway routing game.
+- Route `/game`: Main gameplay page where authenticated users can start a match, select their path, and execute the route.
 - Route `/ranking`: Leaderboard page displaying the global ranking of users.
 - Route `*`: Fallback "Not found" page for unrecognized URLs.
 
 ## API Server
 
 - POST `/api/sessions`
-  - request body content: `{ "email": "test@polito.it", "password": "password" }`
-  - response body content: Logged-in user object (e.g., `{ "id": 1, "email": "test@polito.it", "name": "Test User" }`)
+  - Parameters: None. Body: `{ "email": "test@polito.it", "password": "password" }`
+  - Exchanged objects: Returns the logged-in user object (e.g., `{ "id": 1, "email": "...", "name": "..." }`).
 - GET `/api/sessions/current`
-  - request parameters: None
-  - response body content: Currently authenticated user object. Returns `401 Not authenticated` if no active session.
+  - Parameters: None.
+  - Exchanged objects: Returns the currently authenticated user object, or `401` error object if not authenticated.
 - DELETE `/api/sessions/current`
-  - request parameters: None
-  - response body content: Empty (Status 200). Clears the current user session.
+  - Parameters: None. 
+  - Exchanged objects: Empty response (Status 200). Clears the current user session.
 - POST `/api/games/start`
-  - request parameters: None
-  - response body content: JSON object containing match details (`startStation`, `destinationStation`, `currentStationId`, `coins`, `deadline` timestamp, and `nextSteps` array).
+  - Parameters: None.
+  - Exchanged objects: Returns a JSON object with match details (`startStation`, `destinationStation`, `currentStationId`, `coins`, `deadline`, and `nextSteps` array).
 - POST `/api/games/execute`
-  - request body content: JSON array of the submitted route IDs (`{ "route": [ 2, 5, 6 ] }`)
-  - response body content: JSON object with the match outcome (`valid` boolean, `finalScore`, and either an `executionSteps` array detailing applied random events, or an error `message`).
+  - Parameters: None. Body: JSON array of submitted route IDs (`{ "route": [ 2, 5, 6 ] }`).
+  - Exchanged objects: Returns a JSON object with the match outcome (`valid` boolean, `finalScore`, and either an `executionSteps` array detailing events or an error message).
 - GET `/api/games/ranking`
-  - request parameters: None
-  - response body content: JSON array containing the global leaderboard data.
+  - Parameters: None.
+  - Exchanged objects: Returns a JSON array of objects representing the global leaderboard data.
 - GET `/api/network`
-  - request parameters: None
-  - response body content: JSON object/array representing the full subway network map (stations and connections).
+  - Parameters: None.
+  - Exchanged objects: Returns a JSON object/array representing the full subway network map.
 
 ## Database Tables
 
-- Table `users` - contains user credentials (`id`, `email`, `name`, `hash` for encrypted passwords, `salt`).
-- Table `stations` - contains the subway stations (`id`, `name`, `is_interchange` boolean flag).
-- Table `lines` - contains the subway line details (`id`, `name`, `color`).
-- Table `connections` - contains the segments linking stations together (`id`, `line_id`, `station_a_id`, `station_b_id`).
-- Table `events` - contains the random events that can occur during a trip and their score impact (`id`, `description`, `coin_modifier`).
-- Table `matches` - contains the match history for the leaderboard (`id`, `user_id`, `start_station_id`, `destination_station_id`, `final_score`, `date`).
+- Table `users` - Contains user credentials and authentication data (`id`, `email`, `name`, `hash`, `salt`).
+- Table `stations` - Contains the subway stations data (`id`, `name`, `is_interchange`).
+- Table `lines` - Contains the subway lines details (`id`, `name`, `color`).
+- Table `connections` - Contains the segments linking stations together to form the network (`id`, `line_id`, `station_a_id`, `station_b_id`).
+- Table `events` - Contains the random events occurring during a trip and their impact on coins (`id`, `description`, `coin_modifier`).
+- Table `matches` - Contains the match history used to generate the global leaderboard (`id`, `user_id`, `start_station_id`, `destination_station_id`, `final_score`, `date`).
 
 ## Main React Components
 
-- `App` (in `App.jsx`): Root component handling the React Router routing and the global authentication state.
-- `GamePage` (in `components/GamePage.jsx`): Container for the main game. Coordinates the game flow between setup, active gameplay, and match results.
+- `App` (in `App.jsx`): Root component handling the React Router paths and the global authentication state.
+- `GamePage` (in `components/GamePage.jsx`): Container for the main game, managing the flow between setup, active gameplay, and results.
 - `GamePlay` (in `components/GameComponents/GamePlay.jsx`): Manages the active game session, displaying valid adjacent stations and handling path selection.
-- `GameTimer` (in `components/GameComponents/GameTimer.jsx`): Manages the 90-second countdown for the game session.
-- `LoginPage` (in `components/LoginPage.jsx`): Handles the user login form and interacts with the authentication API.
+- `GameTimer` (in `components/GameComponents/GameTimer.jsx`): Manages the 90-second countdown for the planning phase of the game session.
+- `LoginPage` (in `components/LoginPage.jsx`): Handles the user login form and interacts with the API for authentication.
 - `RankingPage` (in `components/RankingPage.jsx`): Fetches and displays the global game leaderboard.
 - `NavbarComponent` (in `components/NavbarComponent.jsx`): Navigation bar with links to the various views and the logout action.
 
-## Screenshot
+## Screenshots
 
-![Screenshot](./img/screenshot.jpg)
+![Game Phase](./img/game_screenshot.jpg)
+
+![Ranking Page](./img/ranking_screenshot.jpg)
 
 ## Users Credentials
 
@@ -64,14 +66,14 @@
 
 ## Use of AI Tools
 
-For the realization of this project, I relied on some external resources to speed up the workflow and resolve the most complex tasks[cite: 2]:
+For the realization of this project, I relied on some external resources to speed up the workflow and resolve the most complex tasks:
 
-- **Boilerplate Code (Standard Configurations)**: For the entire authentication process using Passport (LocalStrategy, user serialization) and the basic configuration of middleware like CORS and Express session management, I reused and adapted the base structure from a friend's project from last year[cite: 2].
-- **Use of AI (ChatGPT/Copilot)**: I utilized Artificial Intelligence mainly as an assistant in five specific areas[cite: 2]:
-  - To implement the BFS algorithm (`getRandomStations` in the DAO) to calculate a minimum distance of 3 stops between the start and destination points[cite: 2].
-  - To structure the logic for validating line changes and interchange stations during the match execution route[cite: 2].
-  - To quickly generate the mock data used to populate the database tables (station names, connections, and random events)[cite: 2].
-  - For debugging purposes throughout the entire process, especially to quickly interpret error messages and fix asynchronous flows involving Promises[cite: 2].
-  - To create all the text content displayed on the website[cite: 2].
+- **Boilerplate Code (Standard Configurations)**: For the entire authentication process using Passport (LocalStrategy, user serialization) and the basic configuration of middleware like CORS and Express session management, I reused and adapted the base structure from a friend's project from last year.
+- **Use of AI (ChatGPT/Copilot)**: I utilized Artificial Intelligence mainly as an assistant in five specific areas:
+  - To implement the BFS algorithm (`getRandomStations` in the DAO) to calculate a minimum distance of 3 stops between the start and destination points.
+  - To structure the logic for validating line changes and interchange stations during the match execution route.
+  - To quickly generate the mock data used to populate the database tables (station names, connections, and random events).
+  - For debugging purposes throughout the entire process, especially to quickly interpret error messages and fix asynchronous flows involving Promises.
+  - To create all the text content displayed on the website.
 
-The rest of the application logic, the structure of the API routes, and the database design were written and integrated by me from scratch[cite: 2].
+The rest of the application logic, the structure of the API routes, and the database design were written and integrated by me from scratch.
