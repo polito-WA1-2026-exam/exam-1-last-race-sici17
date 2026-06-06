@@ -104,14 +104,14 @@ INSERT INTO connections (line_id, station_a_id, station_b_id) VALUES (2, 8, 11);
 INSERT INTO connections (line_id, station_a_id, station_b_id) VALUES (3, 9, 12); -- Campo dell'Eco - Stazione Est
 
 -- Inserimento Eventi Casuali (Almeno 8, con modificatori tra -4 e +4)
-INSERT INTO events (description, coin_modifier) VALUES ('Wrong platform', -3);
-INSERT INTO events (description, coin_modifier) VALUES ('Ticket inspection - all valid', 2);
-INSERT INTO events (description, coin_modifier) VALUES ('Train delayed', -2);
-INSERT INTO events (description, coin_modifier) VALUES ('Found coins on a seat', 1);
-INSERT INTO events (description, coin_modifier) VALUES ('Metro strike - detour required', -4);
-INSERT INTO events (description, coin_modifier) VALUES ('Express train - time saved bonus', 3);
-INSERT INTO events (description, coin_modifier) VALUES ('Pickpocket attempt lost some change', -1);
-INSERT INTO events (description, coin_modifier) VALUES ('Generous stranger paid your coffee', 4);
+INSERT INTO events (description, coin_modifier) VALUES ('Piattaforma sbagliata!', -3);
+INSERT INTO events (description, coin_modifier) VALUES ('Ispezione del biglietto positiva!', 2);
+INSERT INTO events (description, coin_modifier) VALUES ('Treno in ritardo!', -2);
+INSERT INTO events (description, coin_modifier) VALUES ('Hai trovato una moneta su un sedile!', 1);
+INSERT INTO events (description, coin_modifier) VALUES ('Scipero della metro!', -4);
+INSERT INTO events (description, coin_modifier) VALUES ('Metro espresso, che veloce!', 3);
+INSERT INTO events (description, coin_modifier) VALUES ('Pickpocket ti hanno attaccato!', -1);
+INSERT INTO events (description, coin_modifier) VALUES ('Vecchietto generoso ti offre un caffe', 4);
 
 -- Inserimento di un utente di test (Password: 'password')
 -- Nota: Per fare le cose fatte bene come l'alunno, la password nel DB deve essere l'hash+salt. 

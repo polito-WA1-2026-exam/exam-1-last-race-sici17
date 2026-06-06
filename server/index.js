@@ -114,6 +114,7 @@ app.post('/api/games/start',isLoggedIn, async (req, res) => {
       destinationStation: route.destination,
       currentStationId: req.session.currentStationId,
       coins: req.session.coins,
+      deadline: req.session.startTime + 90000,
       nextSteps: nextSteps
     });
   } catch (error) {
@@ -243,7 +244,7 @@ app.get('/api/games/ranking', isLoggedIn, async (req, res) => {
   }
 });
 
-app.get('/api/network', async (req, res) => {
+app.get('/api/network',isLoggedIn, async (req, res) => {
   try {
     const network = await dao.getNetworkMap();
     res.json(network);
