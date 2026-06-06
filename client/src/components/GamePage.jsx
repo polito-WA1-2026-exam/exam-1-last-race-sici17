@@ -19,7 +19,6 @@ const GamePage = (props) => {
     const [timeLeft, setTimeLeft] = useState(90);
     const [gameDeadline, setGameDeadline] = useState(null); // Ricevuta dal server
     const [executionResult, setExecutionResult] = useState(null);
-    const [gameStats, setGameStats] = useState({ coins: 20, segmentsCount: 0 });
 
     // Caricamento asincrono della rete metropolitana al mount
     useEffect(() => {
@@ -211,7 +210,7 @@ const GamePage = (props) => {
                     timeLeft={timeLeft}
                     handleSegmentSelect={handleSegmentSelect}
                     handleConfirmRoute={handleConfirmRoute}
-                    gameStats={{ ...gameStats, segmentsCount: route.length }}
+                    gameStats={{ coins: 20, segmentsCount: route.length }} 
                 />
             )}
             {gamePhase === 'execution' && executionResult && (
