@@ -156,12 +156,10 @@ app.post('/api/games/execute', isLoggedIn, async (req, res) => {
         const validSteps = await dao.getAdjacentStations(currentStationId);
         
         // Troviamo i dettagli specifici del segmento che l'utente vuole percorrere
-        const stepInfo = validSteps.find(s => s.id === parseInt(nextStationId));
+        let stepInfo = validSteps.find(s => s.id === parseInt(nextStationId) && (currentLine === null || s.lineName === currentLine));
 
-        // Se non c'è collegamento, il percorso non è valido
         if (!stepInfo) {
-          isValid = false;
-          break;
+          stepInfo = validSteps.find(s => s.id === parseInt(nextStationId));
         }
 
         // Se stiamo già viaggiando su una linea e la linea del prossimo segmento è diversa...

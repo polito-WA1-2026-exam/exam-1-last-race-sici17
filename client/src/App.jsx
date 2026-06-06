@@ -89,8 +89,8 @@ function App() {
                <Route path="/login" element={<LoginPage handleLogin={handleLogin} loggedIn={loggedIn}/>} />
             
                 {/* Rotta aggiunta per il Gioco (passando setMessage come prop) */}
-               <Route path="/game" element={<GamePage setMessage={setMessage} />} />
-               <Route path="/ranking" element={<RankingPage />} />
+               <Route path="/game" element={loggedIn ? <GamePage setMessage={setMessage} /> : <Navigate to="/login" />} />
+               <Route path="/ranking" element={loggedIn ? <RankingPage /> : <Navigate to="/login" />} />
             
                 {/* Rotta di fallback */}
                 <Route path="*" element={<h2>Pagina non trovata</h2>} />

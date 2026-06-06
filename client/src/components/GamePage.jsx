@@ -123,7 +123,12 @@ const GamePage = (props) => {
             };
 
             setExecutionResult(formattedResult); 
-            setGamePhase('execution');
+            if (formattedResult.won) {
+                setGamePhase('execution');
+            } else {
+              setGamePhase('defeat'); // Salta direttamente alla schermata di sconfitta
+            } 
+            
         } catch (error) {
             if (import.meta.env.DEV) 
                 console.error('Error submitting route:', error);
@@ -153,8 +158,12 @@ const GamePage = (props) => {
                 })
             };
 
-            setExecutionResult(formattedResult);
-            setGamePhase('execution');
+            setExecutionResult(formattedResult); 
+            if (formattedResult.won) {
+                setGamePhase('execution');
+            } else {
+              setGamePhase('defeat'); // Salta direttamente alla schermata di sconfitta
+            } 
         } catch (error) {
             // 2. Se il server restituisce errore (es. rotta incompleta),
             // andiamo diretti alla pagina di sconfitta per timeout senza crashare
