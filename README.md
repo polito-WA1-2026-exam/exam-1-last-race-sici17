@@ -54,9 +54,9 @@
 
 ## Screenshots
 
-![Game Phase](./img/game_screenshot.jpg)
+![Game Phase](./img/Game_screenshot.jpg)
 
-![Ranking Page](./img/ranking_screenshot.jpg)
+![Ranking Page](./img/Ranking_screenshot.jpg)
 
 ## Users Credentials
 
