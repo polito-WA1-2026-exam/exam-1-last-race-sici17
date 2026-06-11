@@ -40,7 +40,7 @@ const getUserInfo = async () => {
     if (response.ok) {
         return await response.json();
     }
-    return null;
+    return null; //nessun errore semplicemente reinderizza, utile per uso cookies
 };
 
 // game management api

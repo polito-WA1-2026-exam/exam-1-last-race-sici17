@@ -7,32 +7,28 @@ import { VictoryGameResult, DefeatGameResult } from "./GameComponents/GameResult
 import API from "../API/API.mjs";
 
 const GamePage = (props) => {
-
     const navigate = useNavigate();
     const [gamePhase, setGamePhase] = useState('setup'); 
     const [network, setNetwork] = useState(null);
-    const [gameData, setGameData] = useState(null); // id partita, startStation, destStation
-    const [route, setRoute] = useState([]); // array dei tratti selezionati dall'utente
+    const [gameData, setGameData] = useState(null);
+    const [route, setRoute] = useState([]);
     const [timeLeft, setTimeLeft] = useState(90);
     const [gameDeadline, setGameDeadline] = useState(null); 
     const [executionResult, setExecutionResult] = useState(null);
 
-    // caricamento della rete metropolitana 
     useEffect(() => {
         const fetchNetwork = async () => {
             try {
                 const data = await API.getNetwork();
                 setNetwork(data);
             } catch (error) {
-                if (import.meta.env.DEV) 
-                    console.error('fetch network:', error);
+                if (import.meta.env.DEV) console.error('fetch network:', error);
                 props.setMessage('Errore: loading the map is impossible');
             }
         };
         fetchNetwork();
     }, []);
 
-    // timer 
     useEffect(() => {
         if (gamePhase === 'planning' && gameDeadline) {
             const updateTimer = () => {
@@ -54,15 +50,13 @@ const GamePage = (props) => {
     const startGame = async () => {
         try {
             props.setMessage(null);
-            const data = await API.startNewGame(); // fornisce gameId, startStation, destStation, deadline
-
+            const data = await API.startNewGame();
             setGameData(data);
             setRoute([]);
             setGameDeadline(data.deadline);
             setGamePhase('planning');
         } catch (error) {
-            if (import.meta.env.DEV) 
-                console.error('Error starting game:', error);
+            if (import.meta.env.DEV) console.error('Error starting game:', error);
             props.setMessage(`Errore: impossibile avviare la partita`);
         }
     };
@@ -95,50 +89,16 @@ const GamePage = (props) => {
         return finalRouteStations;
     };
 
-    const handleConfirmRoute = async () => {
+    const submitFinalRoute = async (isTimeoutActive = false) => {
         try {
             props.setMessage(null);
-            const routePayload = calculateStationRoute();
-            const result = await API.submitRoute(routePayload);
-            
-            const formattedResult = {
-                won: !!result.valid,
-                finalScore: result.finalScore,
-                events: (result.executionSteps || []).map(step => {
-                    const stationObj = network.stations.find(s => s.id === step.stationId);
-                    return {
-                        station: stationObj ? stationObj.name : `Stazione ${step.stationId}`,
-                        description: step.event ? step.event.description : "Nessun imprevisto",
-                        coinChange: step.event ? step.event.coinModifier : 0
-                    };
-                })
-            };
-
-            setExecutionResult(formattedResult); 
-            if (formattedResult.won) {
-                setGamePhase('execution');
-            } else {
-              setGamePhase('defeat'); 
-            } 
-            
-        } catch (error) {
-            if (import.meta.env.DEV) 
-                console.error('Error submitting route:', error);
-            props.setMessage({ msg: 'error during route verification', type: 'danger' });
-        }
-    };
-
-    const handleTimeUp = async () => {
-        setGameDeadline(null); 
-        
-        try {
-            const routePayload = calculateStationRoute();
+            const routePayload = isTimeoutActive ? [] : calculateStationRoute();
             const result = await API.submitRoute(routePayload);
             
             const formattedResult = {
                 won: !!result.valid,
                 finalScore: result.finalScore || 0,
-                isTimeout: true, 
+                isTimeout: isTimeoutActive || result.isTimeout || false,
                 events: (result.executionSteps || []).map(step => {
                     const stationObj = network.stations.find(s => s.id === step.stationId);
                     return {
@@ -150,28 +110,28 @@ const GamePage = (props) => {
             };
 
             setExecutionResult(formattedResult); 
-            if (formattedResult.won) {
-                setGamePhase('execution');
-            } else {
-              setGamePhase('defeat'); 
-            } 
+            setGamePhase(formattedResult.won ? 'execution' : 'defeat');
+            
         } catch (error) {
-            setExecutionResult({
-                won: false,
-                finalScore: 0, 
-                isTimeout: true, 
-                events: []
-            });
-            setGamePhase('defeat');
+            if (import.meta.env.DEV) console.error('Error submitting route:', error);
+            
+            if (isTimeoutActive) {
+                setExecutionResult({ won: false, finalScore: 0, isTimeout: true, events: [] });
+                setGamePhase('defeat');
+            } else {
+                props.setMessage({ msg: 'error during route verification', type: 'danger' });
+            }
         }
     };
 
+    const handleConfirmRoute = () => submitFinalRoute(false);
+    const handleTimeUp = () => {
+        setGameDeadline(null);
+        submitFinalRoute(true);
+    };
+
     const handleExecutionComplete = () => {
-        if (executionResult && executionResult.won) {
-            setGamePhase('victory');
-        } else {
-            setGamePhase('defeat');
-        }
+        setGamePhase(executionResult?.won ? 'victory' : 'defeat');
     };
 
     const resetGame = () => {
@@ -196,9 +156,7 @@ const GamePage = (props) => {
 
     return (
         <div className="main-game-page">
-            {gamePhase === 'setup' && network && (
-                <SetupPhase network={network} onStartGame={startGame} />
-            )}
+            {gamePhase === 'setup' && <SetupPhase network={network} onStartGame={startGame} />}
             {gamePhase === 'planning' && gameData && (
                 <GamePlay 
                     gameData={gameData}
@@ -211,10 +169,7 @@ const GamePage = (props) => {
                 />
             )}
             {gamePhase === 'execution' && executionResult && (
-                <ExecutionPhase 
-                    events={executionResult.events} 
-                    onComplete={handleExecutionComplete}
-                />
+                <ExecutionPhase events={executionResult.events} onComplete={handleExecutionComplete} />
             )}
             {gamePhase === 'victory' && executionResult && (
                 <VictoryGameResult score={executionResult.finalScore} resetGame={resetGame} goHome={goHome} />

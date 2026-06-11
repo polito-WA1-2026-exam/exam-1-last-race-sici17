@@ -8,7 +8,7 @@ const db = new sqlite.Database('db.sqlite', (err)=>{
 
 // function to manage the users
 
-export const getUser = (email, password) => {
+const getUser = (email, password) => {
     return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM users WHERE email = ?';
         db.get(sql, [email], (err, row) => {
@@ -84,7 +84,7 @@ const getRandomStations = async () => {
                 }
             }
 
-            // filtriamo solo le destinazioni raggiungibili che distano almeno 3 fermate tra di loro
+            // filtriamo solo le destinazioni  che distano almeno 3 fermate tra di loro
             const validDestinations = stations.filter(s => distances[s.id] >= 3);
 
             // se troviamo destinazioni valide, ne scegliamo una a caso e restituiamo la coppia
