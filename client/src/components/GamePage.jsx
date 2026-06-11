@@ -119,7 +119,8 @@ const GamePage = (props) => {
                 setExecutionResult({ won: false, finalScore: 0, isTimeout: true, events: [] });
                 setGamePhase('defeat');
             } else {
-                props.setMessage({ msg: 'error during route verification', type: 'danger' });
+                setExecutionResult({ won: false, finalScore: 0, isTimeout: false, events: [] });
+                setGamePhase('defeat');
             }
         }
     };

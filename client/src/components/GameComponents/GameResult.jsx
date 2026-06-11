@@ -3,7 +3,7 @@ import { Card, Button, Container } from 'react-bootstrap';
 import '../../styles/GameResult.css'; 
 
 export const VictoryGameResult = ({ score, resetGame, goHome }) => {
-    
+    const displayScore = score < 0 ? 0 : score;
     return (
         <Container className="d-flex justify-content-center align-items-center min-vh-100">
             <Card className="text-center result-card border-success p-4" style={{ width: '30rem' }}>
